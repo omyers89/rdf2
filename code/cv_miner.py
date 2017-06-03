@@ -157,7 +157,7 @@ if __name__ == '__main__':
     if __name__ == '__main__':
         # from find_inconsistecies import fix_graphic
         DEBUG = True
-        quick = False
+        quick = True
         db = DBPEDIA_URL
 
         for d in [{'person': "http://dbpedia.org/ontology/Person"}]:
