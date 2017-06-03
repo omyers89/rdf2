@@ -140,7 +140,7 @@ class Cv_Miner(miner):
         res_dict={}
         for (p,pm), (c ,t) in self.cv_props.items():
             ratio = (float(c) / t)
-            if ratio < TH:
+            if ratio > TH:
                 res_dict[(p,pm)] = ratio
         self.hs_profiler.disable()
         return res_dict
