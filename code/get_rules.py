@@ -114,9 +114,9 @@ def get_all_rules(subj):
 if __name__ == '__main__':
 
     #get_all_rules([{'comedian': "http://dbpedia.org/ontology/Comedian"}])
-    for d in [{'comedian': "http://dbpedia.org/ontology/Comedian"}]:
+    for d in [{'person': "http://dbpedia.org/ontology/Person"}]:
         for s, suri in d.items():
-            get_all_rules(s)
+            print_cv_rules_to_csv(s)
     #for d in dictionaries:
 
         
