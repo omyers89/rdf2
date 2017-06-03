@@ -94,11 +94,9 @@ def print_cv_rules_to_csv(subj):
         for (p1,p2), r in all_p_rules.items():
             p1_uni = (p1).encode('utf-8')
             p2_uni = (p2).encode('utf-8')
+            rat = r
 
-            sim = float(r['sim'])
-            tot = float(r['tot'])
-
-            data = {'p1': p1_uni, 'p2': p2_uni, 'Ratio': sim/tot}
+            data = {'p1': p1_uni, 'p2': p2_uni, 'Ratio': rat}
             writer.writerow(data)
 
     csvfile1.close()
