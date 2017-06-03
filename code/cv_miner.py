@@ -110,8 +110,8 @@ class Cv_Miner(miner):
     def mine_cv_rules(self,quick, TH=0.85):
         self.hs_profiler.enable()
         print "mining rules for {}".format(self.subject)
-        s_dump_name = "../" + self.subject + "/" + self.subject + "_top.dump"
-        p_dump_name = "../" + self.subject + "/" + self.subject + "_prop.dump"
+        s_dump_name = "../results/" + self.subject + "/" + self.subject + "_top.dump"
+        p_dump_name = "../results/" + self.subject + "/" + self.subject + "_prop.dump"
         # get the 100 most popular properties for type person in dbp
         p_dict = self.get_p_dict_from_dump(quick, p_dump_name)
         s_dict = self.get_s_dict_from_dump(quick, s_dump_name)
@@ -170,7 +170,7 @@ if __name__ == '__main__':
                 res = cvm.mine_cv_rules(quick)
                 print 'profiling: {}'.format(s)
                 cvm.get_stats()
-                dump_name = "../" + s + "/" + s + "_cv_dict.dump"
+                dump_name = "../results/" + s + "/" + s + "_cv_dict.dump"
                 p_file = open(dump_name, 'w')
                 pickle.dump(res, p_file)
                 p_file.close()

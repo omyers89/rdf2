@@ -143,7 +143,7 @@ def get_all_p_dict(uri, dump_name,dir_name):
         p = inner_res["p"]["value"]
         cnt = inner_res["cnt"]["value"]
         p_dict[p] = cnt
-
+    dir_name = "../results/" + dir_name
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
     p_dict_file = open(dir_name + "/" + dump_name, 'w')
@@ -182,6 +182,7 @@ def get_p_p_dict(uri, dump_name,dir_name):
         cnt = inner_res["cnt"]["value"]
         p_dict[p] = cnt
 
+    dir_name = "../results/" + dir_name
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
     p_dict_file = open(dir_name + "/" + dump_name, 'w')

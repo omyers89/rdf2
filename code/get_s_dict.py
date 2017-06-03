@@ -4,8 +4,8 @@ import csv
 from Utils import dictionaries
 
 def get_subj_from_dump(subj_name):
-    rf_name = subj_name + "/" + subj_name + "_top.dump"
-    rp_name = subj_name + "/" + subj_name + "_prop.dump"
+    rf_name = "../results/" + subj_name + "/" + subj_name + "_top.dump"
+    rp_name = "../results/" + subj_name + "/" + subj_name + "_prop.dump"
     if not os.path.exists(rf_name):
         return
     sujects_f = open(rf_name, 'r')
@@ -14,7 +14,7 @@ def get_subj_from_dump(subj_name):
     sujects_f.close()
 
     print "the number of {} is:{}".format(subj_name, len(all_subj))
-    csvf_name = subj_name + "/" + subj_name + "_subject.csv"
+    csvf_name = "../results/" + subj_name + "/" + subj_name + "_subject.csv"
     with open(csvf_name, 'w') as csvfile1:
         fieldnames = ['uri']
         writer = csv.DictWriter(csvfile1, fieldnames=fieldnames)
@@ -36,7 +36,7 @@ def get_subj_from_dump(subj_name):
     sujects_p.close()
 
     print "the number of {} is:{}".format(subj_name, len(all_prop))
-    csvp_name = subj_name + "/" + subj_name + "_props.csv"
+    csvp_name = "../results/" + subj_name + "/" + subj_name + "_props.csv"
     with open(csvp_name, 'w') as csvfile2:
         fieldnames = ['uri', 'cnter']
         writer = csv.DictWriter(csvfile2, fieldnames=fieldnames)

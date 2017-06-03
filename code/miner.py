@@ -309,8 +309,8 @@ class miner():
 
     def mine_rules(self, quick, min_pos_th=0.2, positive_total_ratio_th=0.8):
         print "mining rules for {}".format(self.subject)
-        s_dump_name = self.subject + "/" + self.subject + "_top.dump"
-        p_dump_name = self.subject + "/" + self.subject + "_prop.dump"
+        s_dump_name = "../results/" + self.subject + "/" + self.subject + "_top.dump"
+        p_dump_name = "../results/" + self.subject + "/" + self.subject + "_prop.dump"
         # get the 100 most popular properties for type person in dbp
         p_dict = self.get_p_dict_from_dump(quick, p_dump_name)
         s_dict = self.get_s_dict_from_dump(quick, s_dump_name)
@@ -428,7 +428,7 @@ class miner():
 
         all_rules_list = (rules70_, rules60_70, rules70_dbo, rules_wierd, rules_wierd_dbo, one_of_a_kind, low_props)
 
-        dir_name = self.subject
+        dir_name = "../results/" + self.subject
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
         dump_name = dir_name + "/" + self.subject + "_rules.dump"

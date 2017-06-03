@@ -5,7 +5,7 @@ from Utils import dictionaries, dictionariest
 
 
 def get_incs_f(subj_name):
-    rf_name = subj_name + "/" + subj_name + "_incs.dump"
+    rf_name = "../results/" + subj_name + "/" + subj_name + "_incs.dump"
     if not os.path.exists(rf_name):
         return
     incs_file = open(rf_name, 'r')
@@ -13,8 +13,8 @@ def get_incs_f(subj_name):
     if len(incos) < 3: return
     (inco_dict, inco_ones, inco_dbot_dict) = incos
     incs_file.close()
-    csvf_name = subj_name + "/" + subj_name + "_incs.csv"
-    csvf_dbo_name = subj_name + "/" + subj_name + "_incs_dbot.csv"
+    csvf_name = "../results/" + subj_name + "/" + subj_name + "_incs.csv"
+    csvf_dbo_name = "../results/" + subj_name + "/" + subj_name + "_incs_dbot.csv"
     for (inc_dict, inc_name) in [(inco_dict, csvf_name), (inco_dbot_dict, csvf_dbo_name)]:
         with open(inc_name, 'w') as csvfile:
             fieldnames = ['Person', 'Property', 'Type', 'rn', 'rel_rate']
@@ -39,7 +39,7 @@ def get_incs_f(subj_name):
                     #print {'Person': pers, 'Property': p, 'Type': t}
         csvfile.close()
 
-    csvf_name = subj_name + "/" + subj_name + "_ons_incs.csv"
+    csvf_name = "../results/" + subj_name + "/" + subj_name + "_ons_incs.csv"
     with open(csvf_name, 'w') as csvfile:
         fieldnames = ['Person', 'Property', 'Type', 'rn']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -57,14 +57,14 @@ def get_incs_f(subj_name):
 
 
 def get_incs_p(subj_name):
-    rf_name = subj_name + "/" + subj_name + "_p_incs.dump"
+    rf_name = "../results/" + subj_name + "/" + subj_name + "_p_incs.dump"
     if not os.path.exists(rf_name):
         return
     incs_file = open(rf_name, 'r')
     incos = pickle.load(incs_file)
 
     incs_file.close()
-    csvf_name = subj_name + "/" + subj_name + "_p_incs.csv"
+    csvf_name = "../results/" + subj_name + "/" + subj_name + "_p_incs.csv"
     with open(csvf_name, 'w') as csvfile:
         fieldnames = ['subj','p1', 'p2']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)

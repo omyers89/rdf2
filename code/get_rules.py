@@ -8,7 +8,7 @@ from Utils import dictionaries, dictionariest
 def print_rules_to_csv(subj):
    
     
-    rf_name = subj + "/" + subj + "_rules.dump"
+    rf_name = "../results/" + subj + "/" + subj + "_rules.dump"
     if not os.path.exists(rf_name):
         return
     rules_file = open(rf_name, 'r')
@@ -50,7 +50,7 @@ def print_rules_to_csv(subj):
 def print_f_rules_to_csv(subj):
 
 
-    rf_name = subj + "/" + subj + "_f_rules.dump"
+    rf_name = "../results/" + subj + "/" + subj + "_f_rules.dump"
     if not os.path.exists(rf_name):
         return
     rules_file = open(rf_name, 'r')
@@ -58,7 +58,7 @@ def print_f_rules_to_csv(subj):
     rules_file.close()
 
     all_p_rules, op_sim_dict = all_p_rules_tup;
-    csvf_name = subj + "/" + subj + "_f_rules.csv"
+    csvf_name = "../results/" + subj + "/" + subj + "_f_rules.csv"
 
     with open(csvf_name, 'w') as csvfile1:
         fieldnames = ['p1', 'p2', 'Ratio']
