@@ -46,10 +46,7 @@ def print_rules_to_csv(subj):
         csvfile1.close()
 
 
-
 def print_f_rules_to_csv(subj):
-
-
     rf_name = "../results/" + subj + "/" + subj + "_f_rules.dump"
     if not os.path.exists(rf_name):
         return
@@ -76,6 +73,37 @@ def print_f_rules_to_csv(subj):
             writer.writerow(data)
 
     csvfile1.close()
+
+
+def print_cv_rules_to_csv(subj):
+    rf_name = "../results/" + subj + "/" + subj + "_cv_dict.dump"
+    if not os.path.exists(rf_name):
+        return
+    rules_file = open(rf_name, 'r')
+    all_p_rules_tup = pickle.load(rules_file)
+    rules_file.close()
+
+    all_p_rules, op_sim_dict = all_p_rules_tup;
+    csvf_name = "../results/" + subj + "/" + subj + "_cv_rules.csv"
+
+    with open(csvf_name, 'w') as csvfile1:
+        fieldnames = ['p1', 'p2', 'Ratio']
+        writer = csv.DictWriter(csvfile1, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for (p1,p2), r in all_p_rules.items():
+            p1_uni = (p1).encode('utf-8')
+            p2_uni = (p2).encode('utf-8')
+
+            sim = float(r['sim'])
+            tot = float(r['tot'])
+
+            data = {'p1': p1_uni, 'p2': p2_uni, 'Ratio': sim/tot}
+            writer.writerow(data)
+
+    csvfile1.close()
+
+
 
 
 def get_all_rules(subj):
