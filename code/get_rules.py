@@ -83,7 +83,7 @@ def print_cv_rules_to_csv(subj):
     all_p_rules_tup = pickle.load(rules_file)
     rules_file.close()
 
-    all_p_rules, op_sim_dict = all_p_rules_tup;
+    all_p_rules = all_p_rules_tup;
     csvf_name = "../results/" + subj + "/" + subj + "_cv_rules.csv"
 
     with open(csvf_name, 'w') as csvfile1:
