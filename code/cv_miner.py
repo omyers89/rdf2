@@ -160,7 +160,7 @@ if __name__ == '__main__':
         quick = True
         db = DBPEDIA_URL
 
-        for d in [{'person': "http://dbpedia.org/ontology/Person"}]:
+        for d in [{'politician': "http://dbpedia.org/ontology/Politician"}]:
 
             # for d in dictionariesq:
             for s, suri in d.items():
