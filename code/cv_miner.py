@@ -154,24 +154,23 @@ class Cv_Miner(miner):
 
 if __name__ == '__main__':
 
-    if __name__ == '__main__':
-        # from find_inconsistecies import fix_graphic
-        DEBUG = True
-        quick = True
-        db = DBPEDIA_URL
+    # from find_inconsistecies import fix_graphic
+    DEBUG = True
+    quick = True
+    db = DBPEDIA_URL
 
-        for d in [{'politician': "http://dbpedia.org/ontology/Politician"}]:
+    for d in [{'politician': "http://dbpedia.org/ontology/Politician"}]:
 
-            # for d in dictionariesq:
-            for s, suri in d.items():
-                # t = Thread(target=mine_all_rules, args=(DBPEDIA_URL, s, suri, quick,))
-                # t.start()
-                cvm = Cv_Miner(DBPEDIA_URL_UP, s, suri)
-                res = cvm.mine_cv_rules(quick)
-                print 'profiling: {}'.format(s)
-                cvm.get_stats()
-                dump_name = "../results/" + s + "/" + s + "_cv_dict.dump"
-                p_file = open(dump_name, 'w')
-                pickle.dump(res, p_file)
-                p_file.close()
+        # for d in dictionariesq:
+        for s, suri in d.items():
+            # t = Thread(target=mine_all_rules, args=(DBPEDIA_URL, s, suri, quick,))
+            # t.start()
+            cvm = Cv_Miner(DBPEDIA_URL_UP, s, suri)
+            res = cvm.mine_cv_rules(quick)
+            print 'profiling: {}'.format(s)
+            cvm.get_stats()
+            dump_name = "../results/" + s + "/" + s + "_cv_dict.dump"
+            p_file = open(dump_name, 'w')
+            pickle.dump(res, p_file)
+            p_file.close()
 
