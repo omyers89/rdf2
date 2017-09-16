@@ -1,91 +1,170 @@
 import json
 import urllib
-from HTMLParser import HTMLParser
 from lxml import etree
-import re
-
 import csv
-DEBUG = True
+from miner import *
+import codecs
+import exceptions
+from string import rsplit, strip, split
 
-name = r'([A-Z][a-z]+ )+'
-year = r'[1-9][1-9][1-9][1-9]'
+from info_parser import TableParser
+DEBUG = False
+
+def LOG (prow):
+    if DEBUG:
+        print prow
+
+class rel_info_finder:
+    def __init__(self, isubj, isubj_db_uri, iinc_path):
+        self.subj = isubj
+        self.mm = miner(DBPEDIA_URL_UP, isubj, isubj_db_uri)
+        self.inc_path = iinc_path
+        self.true_dict = {}
+        self.fix_truth = {}
+
+    
+    def get_subj_from_uri(self,uri_strin):
+        tsubj = rsplit(uri_strin,"/")[-1]
+        return tsubj
+
+    def get_related_objects_from_uri(self,row):
+        
+        try:
+            list_of_related_objects = self.mm.update_so_dict(row[1], row[0])
+        except (exceptions.Exception):
+            print "sparql error... "
+            return []
+        names_ = [self.get_subj_from_uri(x) for x in list_of_related_objects]
+        names = [n.replace('_', ' ') for n in names_ ]
+        return names
+
+    def example(self, subj, prop, nms):
+        LOG( ["Subject: ", subj, "Prop: ", prop])
+        self.true_dict[(subj, prop)] = None
+        urls = "https://en.wikipedia.org/wiki/" + subj
+        response = urllib.urlopen(urls).read()
+        
+        try:
+            parser = TableParser(prop, nms)
+            parser.feed(response)
+            self.true_dict[(subj, prop)] = parser.res_dict
+        except Exception as e:
+            print e
+            print subj
+
+    def get_latest_from_true_dict(self,v_dict):
+        """
+        the function gets a dictionay with start and end time of the related objects:
+        returns the one with the latest start time
+        """
+        max = ""
+        max_obj = ""
+        if v_dict == None:
+            return ""
+        for k,v in v_dict.items():
+            if max == "" and len(v)>0:
+                max = v[0]
+                max_obj = k
+            elif max != "" and len(v)>0 and max < v[0]:
+                max = v[0]
+                max_obj = k
+        return max_obj, max
 
 
-class TableParser(HTMLParser):
-    def __init__(self, dataKeyword):
-        HTMLParser.__init__(self)
-        self.in_table = False
 
-        self.in_data = False
-        self.dataAttr = dataKeyword
-        self.re_obj = re.compile(r"^(.*)" + dataKeyword + "(.*)$",re.I)
+    def write_truth_to_csv(self,subj_name, dicts, load=False):
+        if load:
+            rf_name = "../dumps/" + "/" + subj_name + "_truth_single_infobox.dump"
+            if not os.path.exists(rf_name):
+                return
+            incs_file = open(rf_name, 'r')
+            incos = pickle.load(incs_file)
+            incs_file.close()
+        else:
+            incos = dicts
+        csvf_name = "../results/" + subj_name + "/" + subj_name + "_truth_single_infobox.csv"
+        with open(csvf_name, 'w') as csvfile:
+            fieldnames = ['subject','property', 'current_or_latest', 'start_times']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
 
-    def handle_starttag(self, tag, attrs):
-        if tag == 'table' and ('class', 'infobox vcard') in attrs:
-            self.in_table = True
+            for (su,pu), (pt,stm) in incos.items():
+                try:
+                    uni_su = su.encode('utf-8')
+                    uni_pu = pu.encode('utf-8')
+                    cur = pt.encode('utf-8')
+                    tm = stm.encode('utf-8')
+                except:
+                    uni_su = "encode-err"
+                    uni_pu = "encode-err"
+                    cur = "encode-err"
+                    tm = "encode-err"
 
-    def handle_data(self, data):
-        if self.in_table:
-            if self.re_obj.match(data):
-                self.in_data = True
-        if self.in_data and data != "":
-            if re.match(name, data):
-                print "name is:", data
-            if re.match(year, data):
-                print "year is:", data
+                writer.writerow({'subject': uni_su, 'property': uni_pu, 'current_or_latest': cur,'start_time': tm})
 
-    def handle_endtag(self, tag):
-        if self.in_data:
-            if tag == 'table':
-                self.in_table = False
-                self.in_data = False
 
-#api_key = open('../API_key.txt').read()
-#api_key = 'AIzaSyAhokgs_ncsIxGetz64lcXqBun5cBamPVA'
-# query = 'DONALD TRUMP'
-# service_url = 'https://kgsearch.googleapis.com/v1/entities:search'
-# params = {
-#     'query': query,
-#     'limit': 1,
-#     'indent': True,
-#    # 'key': api_key,
-# }
+        csvfile.close()
 
-def example():
-    url = "https://en.wikipedia.org/wiki/Zara_Bate"
-    response = urllib.urlopen(url).read()
-    # table = etree.HTML(response)
-    # rows = iter(table)
-    # #headers = [col.text for col in next(rows)]
-    # for row in rows:
-    #     values = [col.text for col in row]
-    #     print values
+    def auto_fix(self):
+        LOG( 'auto_fix')
+        violation_dict = {}
+        
+        with codecs.open(self.inc_path, mode='r', encoding=None, errors='replace', buffering=1) as csvfile:
+            spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            i = 0
+            for row in spamreader:
 
-    parser = TableParser('spouse')
-    parser.feed(response)
+                row = ', '.join(row).split(',')
+                LOG( row)
+                if len(row) != 2 or ('\\' in row[0]) or i== 0:
+                        i+=1
+                        continue
+                violation_dict[tuple(row)] = {}
+                violation_dict[tuple(row)]['subjet_title'] = subj = self.get_subj_from_uri(row[0])
+                violation_dict[tuple(row)]['property'] = prop = self.get_subj_from_uri(row[1])
+                violation_dict[tuple(row)]['related_objects'] = objs = self.get_related_objects_from_uri(row)
+                if len(objs) == 0:
+                    sys.stdout.write("\b continued")
+                    sys.stdout.write("\r")
+                    sys.stdout.flush()
+                    continue
+                
+                try:
+                    self.example(subj, prop, objs)
+                except:
+                    print "bad example" 
+                sys.stdout.write("\b iter number: {}".format(i))
+                sys.stdout.write("\r")
+                sys.stdout.flush()
+                i+=1
+                if i > 40 and DEBUG:
+                    break
+        if DEBUG:
+            for t in self.true_dict.items():
+                LOG(t)
+    
+        dir_name = "../dumps"
+        if not os.path.exists(dir_name):
+            os.makedirs(dir_name)
+        dump_name = self.subj + "_truth_single_infobox.dump"
+        inc_file = open(dir_name + "/" + dump_name, 'w')
+        pickle.dump(self.true_dict, inc_file)
+        inc_file.close()
+
+        for k,v in self.true_dict.items():
+            
+            cur_late, stm = self.get_latest_from_true_dict(v)
+            self.fix_truth[k] = (cur_late, stm)
+
+        self.write_truth_to_csv(self.subj,self.fix_truth,False)
 
 
 if __name__ == '__main__':
-    print 'work'
-    violation_dict = {}
-    with open('../results/politician_single_incs_csv.csv', 'rb') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-        i = 0
-        for row in spamreader:
 
-            row = ', '.join(row).split(',')
-            print row
-            if len(row) != 2 or ('\\' in row[0]):
-                    continue
-            violation_dict[tuple(row)] = {}
-            violation_dict[tuple(row)]['subjet_title'] = get_subj_from_uri(row[0])
-            violation_dict[tuple(row)]['property'] = get_property_from_uri(row[1])
-            violation_dict[tuple(row)]['related_objects'] = get_related_objects_from_uri(row)
+    # '../results/BasketballPlayer_single_incs.csv'
 
-            i+=1
-            if i > 15 and DEBUG:
-                break
+    rif = rel_info_finder('architectural_structure',
+                          "http://dbpedia.org/ontology/ArchitecturalStructure",
+                          '../results/architectural_structure/architectural_structure_temporal_csv.csv')
+    rif.auto_fix()
 
-
-
-#print response

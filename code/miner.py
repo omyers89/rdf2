@@ -536,7 +536,7 @@ if __name__ == '__main__':
     # from find_inconsistecies import fix_graphic
     DEBUG = True
     quick = True
-    db = DBPEDIA_URL
+    db = DBPEDIA_URL_UP
 
     for d in [{'comedian': "http://dbpedia.org/ontology/Comedian"}]:
 
@@ -544,6 +544,6 @@ if __name__ == '__main__':
         for s, suri in d.items():
             # t = Thread(target=mine_all_rules, args=(DBPEDIA_URL, s, suri, quick,))
             # t.start()
-            mine_all_rules(DBPEDIA_URL, s, suri, quick)
+            mine_all_rules(DBPEDIA_URL_UP, s, suri, quick)
 
 
