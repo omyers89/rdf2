@@ -162,9 +162,9 @@ class rel_info_finder:
 if __name__ == '__main__':
 
     # '../results/BasketballPlayer_single_incs.csv'
-
-    rif = rel_info_finder('architectural_structure',
-                          "http://dbpedia.org/ontology/ArchitecturalStructure",
-                          '../results/architectural_structure/architectural_structure_temporal_csv.csv')
+    # 'person': "http://dbpedia.org/ontology/Person",
+    rif = rel_info_finder('person',
+                          "http://dbpedia.org/ontology/Person",
+                          '../results/person/Person_temporal_csv.csv')
     rif.auto_fix()
 

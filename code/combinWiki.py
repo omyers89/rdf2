@@ -274,9 +274,10 @@ class rel_wikiData_finder:
         self.write_truth_to_csv(self.subj,self.fix_truth,False)
 
 if __name__ == '__main__':
-    rwf = rel_wikiData_finder('architectural_structure',
-                          "http://dbpedia.org/ontology/ArchitecturalStructure",
-                          '../results/architectural_structure/architectural_structure_temporal_csv.csv')
+    rwf = rel_wikiData_finder('person',
+                          "http://dbpedia.org/ontology/Person",
+                          '../results/person/Person_temporal_csv.csv')
+
     rwf.auto_fix()
     #auto_fix()
     #print response
