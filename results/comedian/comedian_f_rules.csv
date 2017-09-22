@@ -1,0 +1,5 @@
+p1,p2,Ratio
+http://dbpedia.org/ontology/birthPlace,http://dbpedia.org/property/placeOfBirth,1.0
+http://dbpedia.org/ontology/genre,http://dbpedia.org/property/genre,1.0
+http://dbpedia.org/ontology/nationality,http://dbpedia.org/property/nationality,1.0
+http://dbpedia.org/ontology/birthPlace,http://dbpedia.org/property/birthPlace,1.0

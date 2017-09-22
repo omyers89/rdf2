@@ -1,0 +1,15 @@
+Property,Type,Ratio,support
+http://dbpedia.org/ontology/race,"http://dbpedia.org/class/yago/SportsInTampa,Florida",0.8,5.0
+http://dbpedia.org/ontology/trainer,http://dbpedia.org/ontology/Jockey,0.7931034482758621,29.0
+http://dbpedia.org/ontology/race,http://dbpedia.org/class/yago/ChurchillDowns,0.8076923076923077,130.0
+http://dbpedia.org/ontology/race,http://dbpedia.org/class/yago/RecurringEventsEstablishedIn1839,0.8,5.0
+http://dbpedia.org/ontology/race,http://dbpedia.org/class/yago/MiddleDistanceHorseRacesForFilliesAndMares,0.7857142857142857,56.0
+http://dbpedia.org/ontology/race,http://dbpedia.org/class/yago/HorseRacesInMaryland,0.768,125.0
+http://dbpedia.org/ontology/race,http://dbpedia.org/ontology/RaceHorse,0.8,5.0
+http://dbpedia.org/ontology/race,http://dbpedia.org/class/yago/HorseRacesInKentucky,0.8089887640449438,89.0
+http://dbpedia.org/ontology/race,http://dbpedia.org/class/yago/SportsInCalvados,0.8,55.0
+http://dbpedia.org/ontology/family,http://dbpedia.org/class/yago/MuroidRodents,0.7727272727272727,44.0
+http://dbpedia.org/ontology/race,http://dbpedia.org/class/yago/RecurringEventsEstablishedIn1939,0.8275862068965517,29.0
+http://dbpedia.org/ontology/race,http://dbpedia.org/class/yago/HorseRacesInItaly,0.75,16.0
+http://dbpedia.org/ontology/race,http://dbpedia.org/class/yago/HorseRacesInIllinois,0.8166666666666667,60.0
+http://dbpedia.org/ontology/honours,http://dbpedia.org/ontology/City,0.75,8.0

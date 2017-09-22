@@ -1,0 +1,8 @@
+subj,p1,p2
+http://dbpedia.org/resource/Mile_High_Stadium,http://dbpedia.org/ontology/owner,http://dbpedia.org/property/owner
+http://dbpedia.org/resource/Lynx_Blue_Line,http://dbpedia.org/ontology/routeStart,http://dbpedia.org/property/start
+http://dbpedia.org/resource/Tenafly_(Erie_Railroad_station),http://dbpedia.org/ontology/owner,http://dbpedia.org/property/owned
+http://dbpedia.org/resource/Seawoods–Darave_railway_station,http://dbpedia.org/ontology/owner,http://dbpedia.org/property/owner
+http://dbpedia.org/resource/Demarest_(Erie_Railroad_station),http://dbpedia.org/ontology/owner,http://dbpedia.org/property/owned
+http://dbpedia.org/resource/Flats_Industrial_Railroad,http://dbpedia.org/ontology/type,http://dbpedia.org/property/type
+http://dbpedia.org/resource/Market–Frankford_Line,http://dbpedia.org/ontology/owner,http://dbpedia.org/property/owner

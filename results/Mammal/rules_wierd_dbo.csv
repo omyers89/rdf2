@@ -1,0 +1,17 @@
+Property,Type,Ratio,support
+http://dbpedia.org/ontology/honours,http://dbpedia.org/resource/Charter_city,1.0,1.0
+http://dbpedia.org/ontology/honours,http://dbpedia.org/resource/Consolidated_city-county,1.0,3.0
+http://dbpedia.org/ontology/breeder,http://dbpedia.org/resource/Privately_held_company,1.0,1.0
+http://dbpedia.org/ontology/trainer,http://dbpedia.org/resource/Privately_held_company,1.0,1.0
+http://dbpedia.org/ontology/honours,http://dbpedia.org/resource/California,1.0,3.0
+http://dbpedia.org/ontology/honours,http://dbpedia.org/resource/Census-designated_place,1.0,1.0
+http://dbpedia.org/ontology/honours,http://dbpedia.org/resource/Unincorporated_area,1.0,1.0
+http://dbpedia.org/ontology/honours,http://dbpedia.org/resource/County_seat,0.6666666666666666,3.0
+http://dbpedia.org/ontology/honours,http://dbpedia.org/resource/Hall_of_fame,1.0,1.0
+http://dbpedia.org/ontology/honours,http://dbpedia.org/resource/List_of_cities_in_Ontario,1.0,1.0
+http://dbpedia.org/ontology/honours,http://dbpedia.org/resource/City,1.0,1.0
+http://dbpedia.org/ontology/honours,http://dbpedia.org/resource/List_of_cities_in_Kentucky,1.0,2.0
+http://dbpedia.org/ontology/honours,http://dbpedia.org/resource/Business_jet,1.0,1.0
+http://dbpedia.org/ontology/owner,http://dbpedia.org/resource/Privately_held_company,1.0,2.0
+http://dbpedia.org/ontology/owner,http://dbpedia.org/resource/Horse_breeding,0.75,4.0
+http://dbpedia.org/ontology/owner,http://dbpedia.org/resource/Thoroughbred_horse_racing,1.0,4.0

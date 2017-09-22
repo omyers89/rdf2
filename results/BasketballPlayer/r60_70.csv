@@ -1,0 +1,7 @@
+Property,Type,Ratio,support
+http://dbpedia.org/ontology/college,http://dbpedia.org/class/yago/UniversitiesAndCollegesInMichigan,0.8333333333333334,6.0
+http://dbpedia.org/ontology/college,http://dbpedia.org/class/yago/UniversitiesAndCollegesInMississippi,0.8,5.0
+http://dbpedia.org/ontology/birthPlace,http://dbpedia.org/class/yago/PopulatedPlacesEstablishedIn1565,0.8333333333333334,6.0
+http://dbpedia.org/ontology/birthPlace,http://dbpedia.org/class/yago/CitiesInIsrael,0.8,5.0
+http://dbpedia.org/ontology/college,http://dbpedia.org/class/yago/UniversitiesAndCollegesInOklahoma,0.75,8.0
+http://dbpedia.org/ontology/college,http://dbpedia.org/ontology/University,0.825531914893617,235.0
