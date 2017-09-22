@@ -218,7 +218,7 @@ class rel_wikiData_finder:
             if max == "" and v["start_time"] != "un-known start time":
                 max = v["start_time"]
                 max_obj = k
-            elif max != "" and max < v["start_time"]:
+            elif max != "" and v["start_time"] != "un-known start time" and max < v["start_time"]:
                 max = v["start_time"]
                 max_obj = k
         return max_obj, max
@@ -246,8 +246,10 @@ class rel_wikiData_finder:
                 #if subj == 'Zara_Bate':
                 #    print 'Barbara_Follett_(politician)'
                 #    example(subj, prop,objs, true_dict)
-
-                self.example(subj, prop,objs)
+                try:
+                    self.example(subj, prop, objs)
+                except:
+                    print "bad example"
                 i+=1
                 sys.stdout.write("\b iter number: {}".format(i))
                 sys.stdout.write("\r")
@@ -265,10 +267,10 @@ class rel_wikiData_finder:
 
         for k,v in self.true_dict.items():
             #returns the current or latest object
-            # check this: -		[('Oswald_Mosley', 'spouse')]	{u'Diana_Mitford': {'end_time': u'1980-01-01T00:00:00Z', 'start_time': u'1936-01-01T00:00:00Z'}, u'Lady_Cynthia_Mosley': {'end_time': u'1933-01-01T00:00:00Z', 'start_time': u'1920-01-01T00:00:00Z'}}	dict
-            #if k == ('Oswald_Mosley', 'spouse'):
-            #    LOG("check this")
-            cur_late, stm = self.get_latest_from_true_dict(v)
+            try:
+                cur_late, stm = self.get_latest_from_true_dict(v)
+            except:
+                print "bad latest"
             self.fix_truth[k] = (cur_late, stm)
 
         self.write_truth_to_csv(self.subj,self.fix_truth,False)

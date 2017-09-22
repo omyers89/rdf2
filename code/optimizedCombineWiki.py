@@ -14,7 +14,7 @@ import exceptions
 
 DBPEDIA_URL = "http://dbpedia.org/sparql"
 WIKI_DAT_URL = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
-DEBUG = True
+DEBUG = False
 
 
 def LOG(prow):
@@ -192,7 +192,7 @@ class rel_wikiData_finder:
 
     def write_truth_to_csv(self, subj_name, dicts, load=False):
         if load:
-            rf_name = "../dumps/" + "/" + subj_name + "_truth_single_wikidata.dump"
+            rf_name = "../dumps/" + "/" + subj_name + "_truth_single_wikidata_opt.dump"
             if not os.path.exists(rf_name):
                 return
             incs_file = open(rf_name, 'r')
@@ -200,7 +200,7 @@ class rel_wikiData_finder:
             incs_file.close()
         else:
             incos = dicts
-        csvf_name = "../results/" + subj_name + "/" + subj_name + "_truth_single_wiki.csv"
+        csvf_name = "../results/" + subj_name + "/" + subj_name + "_truth_single_wiki_opt.csv"
         with open(csvf_name, 'w') as csvfile:
             fieldnames = ['subject', 'property', 'current_or_latest', 'start_time']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -273,7 +273,7 @@ class rel_wikiData_finder:
         dir_name = "../dumps"
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
-        dump_name = self.subj + "_truth_single_wikidata.dump"
+        dump_name = self.subj + "_truth_single_wikidata_opt.dump"
         inc_file = open(dir_name + "/" + dump_name, 'w')
         pickle.dump(self.true_dict, inc_file)
         inc_file.close()

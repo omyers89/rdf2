@@ -72,23 +72,29 @@ class rel_info_finder:
 
 
 
-    def write_truth_to_csv(self,subj_name, dicts, load=False):
+    def write_truth_to_csv(self, load=False):
         if load:
-            rf_name = "../dumps/" + "/" + subj_name + "_truth_single_infobox.dump"
+            rf_name = "../dumps/" + "/" + self.subj + "_truth_single_infobox.dump"
             if not os.path.exists(rf_name):
                 return
             incs_file = open(rf_name, 'r')
-            incos = pickle.load(incs_file)
+            self.true_dict = pickle.load(incs_file)
             incs_file.close()
-        else:
-            incos = dicts
-        csvf_name = "../results/" + subj_name + "/" + subj_name + "_truth_single_infobox.csv"
+
+        for k,v in self.true_dict.items():
+            try:
+                cur_late, stm = self.get_latest_from_true_dict(v)
+            except:
+                print "bad latest"
+            self.fix_truth[k] = (cur_late, stm)
+
+        csvf_name = "../results/" + self.subj + "/" + self.subj + "_truth_single_infobox.csv"
         with open(csvf_name, 'w') as csvfile:
-            fieldnames = ['subject','property', 'current_or_latest', 'start_times']
+            fieldnames = ['subject','property', 'current_or_latest', 'start_time']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
 
-            for (su,pu), (pt,stm) in incos.items():
+            for (su,pu), (pt,stm) in  self.fix_truth.items():
                 try:
                     uni_su = su.encode('utf-8')
                     uni_pu = pu.encode('utf-8')
@@ -121,8 +127,12 @@ class rel_info_finder:
                         continue
                 violation_dict[tuple(row)] = {}
                 violation_dict[tuple(row)]['subjet_title'] = subj = self.get_subj_from_uri(row[0])
+                # if DEBUG:
+                #     if subj != "Anneliese_van_der_Pol":
+                #         #continue
                 violation_dict[tuple(row)]['property'] = prop = self.get_subj_from_uri(row[1])
                 violation_dict[tuple(row)]['related_objects'] = objs = self.get_related_objects_from_uri(row)
+
                 if len(objs) == 0:
                     sys.stdout.write("\b continued")
                     sys.stdout.write("\r")
@@ -138,7 +148,7 @@ class rel_info_finder:
                 sys.stdout.flush()
                 i+=1
                 if i > 40 and DEBUG:
-                    break
+                     break
         if DEBUG:
             for t in self.true_dict.items():
                 LOG(t)
@@ -151,20 +161,18 @@ class rel_info_finder:
         pickle.dump(self.true_dict, inc_file)
         inc_file.close()
 
-        for k,v in self.true_dict.items():
-            
-            cur_late, stm = self.get_latest_from_true_dict(v)
-            self.fix_truth[k] = (cur_late, stm)
-
-        self.write_truth_to_csv(self.subj,self.fix_truth,False)
+        self.write_truth_to_csv(False)
 
 
 if __name__ == '__main__':
 
     # '../results/BasketballPlayer_single_incs.csv'
     # 'person': "http://dbpedia.org/ontology/Person",
+    fix_truth = {}
     rif = rel_info_finder('person',
                           "http://dbpedia.org/ontology/Person",
                           '../results/person/Person_temporal_csv.csv')
+    #rif.write_truth_to_csv(True)
+
     rif.auto_fix()
 
