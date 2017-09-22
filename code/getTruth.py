@@ -1,6 +1,4 @@
-import json
 import urllib
-from lxml import etree
 import csv
 from miner import *
 import codecs
@@ -10,9 +8,6 @@ from string import rsplit, strip, split
 from info_parser import TableParser
 DEBUG = False
 
-def LOG (prow):
-    if DEBUG:
-        print prow
 
 class rel_info_finder:
     def __init__(self, isubj, isubj_db_uri, iinc_path):
@@ -21,7 +16,14 @@ class rel_info_finder:
         self.inc_path = iinc_path
         self.true_dict = {}
         self.fix_truth = {}
-
+    
+    def LOG(self, prow):
+        log_file_name = "../results/" + self.subj + "/" + self.subj + "_getTruth_log.txt"
+        if DEBUG:
+            print prow
+        else:
+            with open(log_file_name, "a") as myfile:
+                myfile.write(prow)
     
     def get_subj_from_uri(self,uri_strin):
         tsubj = rsplit(uri_strin,"/")[-1]
@@ -32,14 +34,14 @@ class rel_info_finder:
         try:
             list_of_related_objects = self.mm.update_so_dict(row[1], row[0])
         except (exceptions.Exception):
-            print "sparql error... "
+            self.LOG( "sparql error... ")
             return []
         names_ = [self.get_subj_from_uri(x) for x in list_of_related_objects]
         names = [n.replace('_', ' ') for n in names_ ]
         return names
 
     def example(self, subj, prop, nms):
-        LOG( ["Subject: ", subj, "Prop: ", prop])
+        self.LOG( ["Subject: ", subj, "Prop: ", prop])
         self.true_dict[(subj, prop)] = None
         urls = "https://en.wikipedia.org/wiki/" + subj
         response = urllib.urlopen(urls).read()
@@ -49,8 +51,8 @@ class rel_info_finder:
             parser.feed(response)
             self.true_dict[(subj, prop)] = parser.res_dict
         except Exception as e:
-            print e
-            print subj
+            self.LOG( e)
+            self.LOG( subj)
 
     def get_latest_from_true_dict(self,v_dict):
         """
@@ -85,7 +87,7 @@ class rel_info_finder:
             try:
                 cur_late, stm = self.get_latest_from_true_dict(v)
             except:
-                print "bad latest"
+                self.LOG( "bad latest")
             self.fix_truth[k] = (cur_late, stm)
 
         csvf_name = "../results/" + self.subj + "/" + self.subj + "_truth_single_infobox.csv"
@@ -112,7 +114,7 @@ class rel_info_finder:
         csvfile.close()
 
     def auto_fix(self):
-        LOG( 'auto_fix')
+        self.LOG( 'auto_fix')
         violation_dict = {}
         
         with codecs.open(self.inc_path, mode='r', encoding=None, errors='replace', buffering=1) as csvfile:
@@ -121,7 +123,7 @@ class rel_info_finder:
             for row in spamreader:
 
                 row = ', '.join(row).split(',')
-                LOG( row)
+                self.LOG( row)
                 if len(row) != 2 or ('\\' in row[0]) or i== 0:
                         i+=1
                         continue
@@ -142,7 +144,7 @@ class rel_info_finder:
                 try:
                     self.example(subj, prop, objs)
                 except:
-                    print "bad example" 
+                    self.LOG( "bad example" )
                 sys.stdout.write("\b iter number: {}".format(i))
                 sys.stdout.write("\r")
                 sys.stdout.flush()
@@ -151,7 +153,7 @@ class rel_info_finder:
                      break
         if DEBUG:
             for t in self.true_dict.items():
-                LOG(t)
+                self.LOG(t)
     
         dir_name = "../dumps"
         if not os.path.exists(dir_name):

@@ -16,9 +16,6 @@ DBPEDIA_URL = "http://dbpedia.org/sparql"
 WIKI_DAT_URL = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
 DEBUG = False
 
-def LOG (prow):
-    if DEBUG:
-        print prow
 
 
 name = r'([A-Z][a-z]+.)+'
@@ -36,6 +33,14 @@ class rel_wikiData_finder:
         self.true_dict = {}
         self.fix_truth = {}
 
+    def LOG(self, prow):
+        log_file_name = "../results/" + self.subj + "/" + self.subj + "_cmbi_log.txt"
+        if DEBUG:
+            print prow
+        else:
+            with open(log_file_name, "a") as myfile:
+                myfile.write(prow)
+
     def get_subj_from_uri(self, uri_strin):
         subj = rsplit(uri_strin, "/")[-1]
         return subj
@@ -45,7 +50,7 @@ class rel_wikiData_finder:
         try:
             list_of_related_objects = self.mm.update_so_dict(row[1], row[0])
         except (exceptions.Exception):
-            print "sparql error... "
+            self.LOG ( "sparql error... ")
             return []
         return list_of_related_objects
 
@@ -93,7 +98,7 @@ class rel_wikiData_finder:
         return pr_list
 
     def get_wikis(self, subj_uri, prop_uri, related_obj_list):
-        LOG( ["Subject: ", subj_uri, "Prop: ", prop_uri])
+        self.LOG( ["Subject: ", subj_uri, "Prop: ", prop_uri])
         #true_dict[(subj_uri, prop_uri)] = None
         wikiSubj = self.get_wiki_subj_from_db_uri(subj_uri)
         wiki_prop = self.get_wiki_prop_from_db_uri(prop_uri)
@@ -105,9 +110,9 @@ class rel_wikiData_finder:
                 other_obj_wiki_list.append(wiki_objs[0])
 
         if len(wikiSubj) > 1 or len(wiki_prop) > 1:
-            LOG("some wikiss")
+            self.LOG("some wikiss")
         if len(wikiSubj) == 0 or len(wiki_prop) == 0:
-            LOG("zero wikiss")
+            self.LOG("zero wikiss")
             return
 
         return wikiSubj[0], self.get_subj_from_uri(wiki_prop[0]), other_obj_wiki_list
@@ -143,7 +148,7 @@ class rel_wikiData_finder:
                 sa_list["end_time"] = inner_res["endtime"]["value"]
 
         if len(results_inner["results"]["bindings"]) > 1:
-           LOG("erroor in start_end_queri")
+           self.LOG("erroor in start_end_queri")
         return sa_list["start_time"], sa_list["end_time"]
 
 
@@ -174,7 +179,7 @@ class rel_wikiData_finder:
         p = self.get_subj_from_uri(prop)
 
         if len(wo_list) != len(objs):
-            LOG("obj list length not equal")
+            self.LOG("obj list length not equal")
             return
         self.true_dict[(s,p)]= {}
         for wo,dbo in zip(wo_list,objs):
@@ -224,7 +229,7 @@ class rel_wikiData_finder:
         return max_obj, max
 
     def auto_fix(self):
-        LOG( 'auto_fix')
+        self.LOG( 'auto_fix')
         violation_dict = {}
         with codecs.open(self.inc_path, mode='r', encoding=None, errors='replace', buffering=1) as csvfile:
             spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
@@ -232,7 +237,7 @@ class rel_wikiData_finder:
             for row in spamreader:
 
                 row = ', '.join(row).split(',')
-                LOG( row)
+                self.LOG( row)
                 if len(row) != 2 or ('\\' in row[0]) or i== 0:
                         i+=1
                         continue
@@ -241,7 +246,8 @@ class rel_wikiData_finder:
                 violation_dict[tuple(row)]['property'] = prop = row[1]
                 violation_dict[tuple(row)]['related_objects'] =  objs = self.get_related_objects_from_uri(row)
                 if len(objs) == 0:
-                    print "continued"
+                    self.LOG ( "continued")
+                    i += 1
                     continue
                 #if subj == 'Zara_Bate':
                 #    print 'Barbara_Follett_(politician)'
@@ -249,11 +255,12 @@ class rel_wikiData_finder:
                 try:
                     self.example(subj, prop, objs)
                 except:
-                    print "bad example"
-                i+=1
-                sys.stdout.write("\b iter number: {}".format(i))
-                sys.stdout.write("\r")
-                sys.stdout.flush()
+                    self.LOG ( "bad example")
+                i += 1
+                if i % 10 == 0:
+                    sys.stdout.write("\b iter number: {}".format(i))
+                    sys.stdout.write("\r")
+                    sys.stdout.flush()
                 if i > 40 and DEBUG:
                     break
 
@@ -270,7 +277,7 @@ class rel_wikiData_finder:
             try:
                 cur_late, stm = self.get_latest_from_true_dict(v)
             except:
-                print "bad latest"
+                self.LOG ( "bad latest")
             self.fix_truth[k] = (cur_late, stm)
 
         self.write_truth_to_csv(self.subj,self.fix_truth,False)

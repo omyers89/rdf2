@@ -3,7 +3,6 @@ import pickle
 import json
 import urllib
 from HTMLParser import HTMLParser
-from lxml import etree
 import re
 from string import rsplit, strip, split
 import csv
@@ -14,12 +13,7 @@ import exceptions
 
 DBPEDIA_URL = "http://dbpedia.org/sparql"
 WIKI_DAT_URL = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
-DEBUG = False
-
-
-def LOG(prow):
-    if DEBUG:
-        print prow
+DEBUG = True
 
 
 name = r'([A-Z][a-z]+.)+'
@@ -40,6 +34,14 @@ class rel_wikiData_finder:
         self.fix_truth = {}
         self.skipping_list = {}
 
+    def LOG(self, prow):
+        log_file_name = "../results/" + self.subj + "/" + self.subj + "_cmbi_opt_log.txt"
+        if DEBUG:
+            print prow
+        else:
+            with open(log_file_name, "a") as myfile:
+                myfile.write(prow)
+
     def get_subj_from_uri(self, uri_strin):
         subj = rsplit(uri_strin, "/")[-1]
         return subj
@@ -49,7 +51,7 @@ class rel_wikiData_finder:
         try:
             list_of_related_objects = self.mm.update_so_dict(row[1], row[0])
         except (exceptions.Exception):
-            print "sparql error... "
+            self.LOG( "sparql error... ")
             return []
         return list_of_related_objects
 
@@ -96,7 +98,7 @@ class rel_wikiData_finder:
         return pr_list
 
     def get_wikis(self, subj_uri, prop_uri, related_obj_list):
-        LOG(["Subject: ", subj_uri, "Prop: ", prop_uri])
+        self.LOG(["Subject: ", subj_uri, "Prop: ", prop_uri])
         # true_dict[(subj_uri, prop_uri)] = None
         wikiSubj = self.get_wiki_subj_from_db_uri(subj_uri)
         wiki_prop = self.get_wiki_prop_from_db_uri(prop_uri)
@@ -111,13 +113,13 @@ class rel_wikiData_finder:
         self.skipping_list[prop_uri]["tot"] += 1
         if len(wiki_prop) == 0:
             self.skipping_list[prop_uri]["zeros"] += 1
-            LOG("zero wikiss prop")
+            self.LOG("zero wikiss prop")
             return
         if len(wikiSubj) == 0 :
-            LOG("zero wikiss subj")
+            self.LOG("zero wikiss subj")
             return
         if len(wikiSubj) > 1 or len(wiki_prop) > 1:
-            LOG("some wikiss")
+            self.LOG("some wikiss")
 
 
         return wikiSubj[0], self.get_subj_from_uri(wiki_prop[0]), other_obj_wiki_list
@@ -153,7 +155,7 @@ class rel_wikiData_finder:
                 sa_list["end_time"] = inner_res["endtime"]["value"]
 
         if len(results_inner["results"]["bindings"]) > 1:
-            LOG("erroor in start_end_queri")
+            self.LOG("erroor in start_end_queri")
         return sa_list["start_time"], sa_list["end_time"]
 
     def get_all_start_end(self, w_subj, w_prop, w_obj):
@@ -182,7 +184,7 @@ class rel_wikiData_finder:
         p = self.get_subj_from_uri(prop)
 
         if len(wo_list) != len(objs):
-            LOG("obj list length not equal")
+            self.LOG("obj list length not equal")
             return
         self.true_dict[(s, p)] = {}
         for wo, dbo in zip(wo_list, objs):
@@ -232,7 +234,7 @@ class rel_wikiData_finder:
         return max_obj, max
 
     def auto_fix(self):
-        LOG('auto_fix')
+        self.LOG('auto_fix')
         violation_dict = {}
         with codecs.open(self.inc_path, mode='r', encoding=None, errors='replace', buffering=1) as csvfile:
             spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
@@ -240,29 +242,32 @@ class rel_wikiData_finder:
             for row in spamreader:
 
                 row = ', '.join(row).split(',')
-                LOG(row)
+                self.LOG(row)
                 if len(row) != 2 or ('\\' in row[0]) or i == 0:
                     i += 1
                     continue
                 violation_dict[tuple(row)] = {}
                 violation_dict[tuple(row)]['subjet_title'] = subj = row[0]
                 violation_dict[tuple(row)]['property'] = prop = row[1]
+                if prop in self.skipping_list:
+                    if ((self.skipping_list[prop]["tot"]) > 20) and (float(self.skipping_list[prop]["zeros"]) == self.skipping_list[prop]["tot"]):
+                            self.LOG("skipped the prop: "+ prop)
+                            i += 1
+                            continue
+
                 violation_dict[tuple(row)]['related_objects'] = objs = self.get_related_objects_from_uri(row)
                 if len(objs) == 0:
-                    LOG("continued")
+                    self.LOG("continued")
+                    i += 1
                     continue
-                if prop in self.skipping_list:
-                    #"tot":0, "zeros": 0
-                    if ((self.skipping_list[prop]["tot"]) > 20) and (float(self.skipping_list[prop]["zeros"]) == self.skipping_list[prop]["tot"]):
-                            LOG("skipped the prop: "+ prop)
-                            continue
+
                 # if subj == 'Zara_Bate':
                 #    print 'Barbara_Follett_(politician)'
                 #    example(subj, prop,objs, true_dict)
                 try:
                     self.example(subj, prop, objs)
                 except:
-                    print "bad example"
+                    self.LOG( "bad example")
                 i += 1
                 sys.stdout.write("\b iter number: {}".format(i))
                 sys.stdout.write("\r")
@@ -282,17 +287,17 @@ class rel_wikiData_finder:
             # returns the current or latest object
             # check this: -		[('Oswald_Mosley', 'spouse')]	{u'Diana_Mitford': {'end_time': u'1980-01-01T00:00:00Z', 'start_time': u'1936-01-01T00:00:00Z'}, u'Lady_Cynthia_Mosley': {'end_time': u'1933-01-01T00:00:00Z', 'start_time': u'1920-01-01T00:00:00Z'}}	dict
             # if k == ('Oswald_Mosley', 'spouse'):
-            #    LOG("check this")
+            #    self.LOG("check this")
             try:
                 cur_late, stm = self.get_latest_from_true_dict(v)
             except:
-                print "bad latest"
+                self.LOG( "bad latest")
             self.fix_truth[k] = (cur_late, stm)
 
         self.write_truth_to_csv(self.subj, self.fix_truth, False)
         for k,(a,b) in self.skipping_list:
             if (a>50) and (float(b) / a > 0.9):
-                print "skipped: " + k
+                self.LOG( "skipped: " + k)
 
         return
 
@@ -303,5 +308,5 @@ if __name__ == '__main__':
 
     rwf.auto_fix()
     # auto_fix()
-    # print response
+    # self.LOG( response
     # example("Donald_Trump", "Spouse" )
