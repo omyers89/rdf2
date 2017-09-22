@@ -6,7 +6,7 @@ import exceptions
 
 DBPEDIA_URL = "http://dbpedia.org/sparql"
 WIKI_DAT_URL = "https://query.wikidata.org/bigdata/namespace/wdq/sparql"
-DEBUG = True
+DEBUG = False
 
 
 name = r'([A-Z][a-z]+.)+'
