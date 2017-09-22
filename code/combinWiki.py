@@ -1,15 +1,7 @@
-from SPARQLWrapper import SPARQLWrapper, JSON
-import pickle
-import json
-import urllib
-from HTMLParser import HTMLParser
-from lxml import etree
-import re
-from string import rsplit, strip, split
+from string import rsplit
 import csv
 from miner import *
 import codecs
-from Utils import *
 import exceptions
 
 DBPEDIA_URL = "http://dbpedia.org/sparql"
@@ -39,7 +31,7 @@ class rel_wikiData_finder:
             print prow
         else:
             with open(log_file_name, "a") as myfile:
-                myfile.write(prow)
+                myfile.write(str(prow))
 
     def get_subj_from_uri(self, uri_strin):
         subj = rsplit(uri_strin, "/")[-1]
