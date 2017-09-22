@@ -22,7 +22,7 @@ class rel_info_finder:
             print prow
         else:
             with open(log_file_name, "a") as myfile:
-                myfile.write(str(prow))
+                myfile.write(str(prow)  + "\n")
     
     def get_subj_from_uri(self,uri_strin):
         tsubj = rsplit(uri_strin,"/")[-1]
