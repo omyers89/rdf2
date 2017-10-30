@@ -1,5 +1,4 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
-
 import pickle
 import sys
 import os
@@ -65,7 +64,7 @@ class miner():
 
     def update_pt(self, t_dict_t,p_unique_t_dict):
         """
-        the function count the uniquenes of types for a specific object and add it to the total statistics
+        the function count the uniqueness of types for a specific object and add it to the total statistics
         about the property & type
         :param t_dict_t: dictionary for all types that appears together with a specific property and true/false for
         uniqueness

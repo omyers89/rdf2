@@ -24,6 +24,7 @@ class Cv_Miner(miner):
         miner.__init__(self, kb, subj, s_uri)
         self.cv_props = {}
         self.hs_profiler = cProfile.Profile()
+
     def get_single_os(self, s):
         '''
         :param s: specific subject uri
@@ -115,10 +116,10 @@ class Cv_Miner(miner):
         # get the 100 most popular properties for type person in dbp
         p_dict = self.get_p_dict_from_dump(quick, p_dump_name)
         s_dict = self.get_s_dict_from_dump(quick, s_dump_name)
-        rules70_ = {}
-        rules70_dbo = {}
-        rules60_70 = {}
-        rules50_60 = {}
+        one_and_only = {}  # A dictionary for the percentage of props that has one value of any type related to them.
+        multiple_values_same_type = {}  # A dictionary for the percentage of props that has multiple values of the same type
+        one_of_a_type = {}
+        rules50_60 = {}  # A dic
         rules_wierd = {}
         rules_wierd_dbo = {}
         one_of_a_kind = {}
@@ -154,7 +155,7 @@ class Cv_Miner(miner):
 
 if __name__ == '__main__':
 
-    # from find_inconsistecies import fix_graphic
+    # from find_inconsistencies import fix_graphic
     DEBUG = True
     quick = True
     db = DBPEDIA_URL
