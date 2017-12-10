@@ -88,15 +88,19 @@ class FeatureMiner(MinerBase):
             #     sys.stdout.write(txt)
             #     sys.stdout.write("\r")
             #     sys.stdout.flush()
+            if DEBUG:
+                sys.stdout.write("\b p #{} done".format(p_indx))
+                sys.stdout.write("\r")
+                sys.stdout.flush()
+            p_indx += 1
 
-
-        dir_name = "../results/" + self.subject
-        if not os.path.exists(dir_name):
-            os.makedirs(dir_name)
-        dump_name = dir_name + "/" + self.subject + "_features.dump"
-        r_dict_file = open(dump_name, 'w')
-        pickle.dump(feature_dictionary, r_dict_file)
-        r_dict_file.close()
+            dir_name = "../results/" + self.subject
+            if not os.path.exists(dir_name):
+                os.makedirs(dir_name)
+            dump_name = dir_name + "/" + self.subject + "_features.dump"
+            r_dict_file = open(dump_name, 'w')
+            pickle.dump(feature_dictionary, r_dict_file)
+            r_dict_file.close()
 
         return feature_dictionary
 
@@ -189,5 +193,4 @@ if __name__ == "__main__":
     # this script will mine all features of all properties of person
     FM = FeatureMiner(DBPEDIA_URL_UP, 'person', "http://dbpedia.org/ontology/Person")
     fd = FM.mine_features(quick=False)
-    for obj in fd.items():
-        print obj
+
