@@ -184,6 +184,7 @@ class FeatureMiner(MinerBase):
 
 
 if __name__ == "__main__":
+    # this script will mine all features of all properties of person
     FM = FeatureMiner(DBPEDIA_URL_UP, 'person', "http://dbpedia.org/ontology/Person")
     fd = FM.mine_features(quick=False)
     for obj in fd.items():
