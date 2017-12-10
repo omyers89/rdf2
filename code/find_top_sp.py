@@ -107,7 +107,7 @@ def get_all_top_of(uri , f_name, dir_name):
 
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
-    s_dict_file = open(dir_name + "/" + f_name, 'w')
+    s_dict_file = open("../results/" + dir_name + "/" + f_name, 'w')
     pickle.dump(top_subjects, s_dict_file)
     s_dict_file.close()
     #print "get top s  done for {}, i is:{}".format(f_name, i)
@@ -195,7 +195,7 @@ def get_ps(uri, s_name ):
     print "started: " +s_name
     subjects_fname = s_name + "_top.dump"
     pprop_fname = s_name + "_prop.dump"
-    pprop_fname_p = s_name + "_prop_p.dump"
+    #pprop_fname_p = s_name + "_prop_p.dump"
 
     get_all_top_of(uri, subjects_fname, s_name)
     get_all_p_dict(uri, pprop_fname, s_name)
