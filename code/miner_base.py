@@ -6,7 +6,6 @@ import time
 
 
 DBPEDIA_URL_UP = "http://dbpedia.org/sparql"
-DEBUG = True
 
 def LOG(s):
     print s
@@ -43,9 +42,9 @@ class MinerBase:
         p_dict_file.close()
 
         if quick:
-            return self.__get_top_15_props(p_dict, n=5)
+            return self.__get_top_15_props(p_dict, n=10)
         else:
-            return self.__get_top_15_props(p_dict, n=25)
+            return self.__get_top_15_props(p_dict, n=100)
 
 
 
