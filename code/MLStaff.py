@@ -8,7 +8,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from feature_miner import *
 
 def creat_traning_data(subj):
-    #reader = csv.DictReader(open('../results/person/person_features.dump', 'rb'))
+    #reader = csv.DictReader(open('../results/person/person_features-old.dump', 'rb'))
     reader = csv.DictReader(open('../results/person/person_props_clsfd.csv', 'rb'))
     classified_properies_dict = {}
     for line in reader:
@@ -47,6 +47,13 @@ def creat_traning_data(subj):
     neigh = KNeighborsClassifier(n_neighbors=3)
     neigh.fit(x_list, y_list)
 
+    dir_name = "../dumps"
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+    dump_name = dir_name + "/" + "knn_clsfr.dump"
+    clsf_file = open(dump_name, 'w')
+    pickle.dump(neigh, clsf_file)
+    clsf_file.close()
     return neigh
 
 def get_class_for_new_x(prop_uri, clsfir, quick):
@@ -60,7 +67,7 @@ def get_class_for_new_x(prop_uri, clsfir, quick):
     # prediction = clsfir.predict_proba[[x_list]]
     # print 'prob for ' + prop_uri + 'is:' + prediction
     # return prediction
-    return x_list
+    return clsfir.predict_proba([x_list])
 
 if __name__ == "__main__":
     clsfir = creat_traning_data('politician')
@@ -73,11 +80,11 @@ if __name__ == "__main__":
 
     print "results:"
     print "x1_list:"
-    print clsfir.predict_proba([x1_list])
+    print x1_list
     print "x11_list:"
-    print clsfir.predict_proba([x11_list])
+    print x11_list
     print "x00_list:"
-    print clsfir.predict_proba([x00_list])
+    print x00_list
     print "x0_list:"
-    print clsfir.predict_proba([x0_list])
+    print x0_list
 
