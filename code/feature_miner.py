@@ -40,12 +40,12 @@ class FeatureMiner(MinerBase):
 
                 if len(o_list) > 1:
                     # check if there is only one object of every type
-                    # rdf_t_uniques = self.check_multiple_vals_same_type(o_list,
-                    #                                      obj_rdf_types_dict)  # Done: for specific person and property find the unique types!
+                    rdf_t_uniques = self.check_multiple_vals_same_type(o_list,
+                                                         obj_rdf_types_dict)  # Done: for specific person and property find the unique types!
                     dbo_t_uniques = self.check_multiple_vals_same_type(o_list,
                                                          obj_dbo_types_dict)  # Done: for specific person and property find the unique types!
 
-                    if not dbo_t_uniques:
+                    if not rdf_t_uniques or not dbo_t_uniques:
                         p_multy_objs_same_type_counter +=1
                     else:
                         p_objs_unique_type_counter +1
