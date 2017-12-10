@@ -190,5 +190,3 @@ if __name__ == "__main__":
     fd = FM.mine_features(quick=False)
     for obj in fd.items():
         print obj
-
-    #'politician': "http://dbpedia.org/ontology/Politician"
