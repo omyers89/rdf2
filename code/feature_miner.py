@@ -18,12 +18,29 @@ class FeatureMiner(MinerBase):
         # get the 100 most popular properties for type person in dbp
         p_dict = self.get_p_dict_from_dump(quick, p_dump_name)
         s_dict = self.get_s_dict_from_dump(quick, s_dump_name)
-        feature_dictionary = {}
+
+        dir_name = "../results/" + self.subject
+        dump_name = dir_name + "/" + self.subject + "_features.dump"
+        if not os.path.exists(dump_name):
+            feature_dictionary = {}
+        else:
+            r_dict_file = open(dump_name, 'r')
+            feature_dictionary = pickle.load(r_dict_file)
+            r_dict_file.close()
+
+
         progress = 0
         p_size = len(p_dict)
         p_indx = 0
+        missed_ps = []
         for p in p_dict:
-            feature_dictionary[p] = self.get_fetures_for_prop(quick, p)
+            if p in feature_dictionary:
+                continue
+            try:
+                feature_dictionary[p] = self.get_fetures_for_prop(quick, p)
+            except:
+                missed_ps.append(p)
+
             # # this dictionary holds the statistics for every p separately p_unique_t_dict[t]={'pos': #uniqueness, 'tot': #totalappearence}
             # p_unique_t_dict = {}
             # p_unique_dbot_dict = {}
@@ -102,7 +119,7 @@ class FeatureMiner(MinerBase):
             pickle.dump(feature_dictionary, r_dict_file)
             r_dict_file.close()
 
-        return feature_dictionary
+        return feature_dictionary, missed_ps
 
     def get_subj_from_uri(self,uri_strin):
         tsubj = rsplit(uri_strin,"/")[-1]
@@ -192,5 +209,9 @@ class FeatureMiner(MinerBase):
 if __name__ == "__main__":
     # this script will mine all features of all properties of person
     FM = FeatureMiner(DBPEDIA_URL_UP, 'person', "http://dbpedia.org/ontology/Person")
-    fd = FM.mine_features(quick=False)
+    fd, missed= FM.mine_features(quick=False)
+    if len(missed) > 0:
+        # try again:
+        fd, missed = FM.mine_features(quick=False)
 
+    print "tried twice ps left:", missed
