@@ -35,6 +35,7 @@ class FeatureMiner(MinerBase):
         missed_ps = []
         for p in p_dict:
             if p in feature_dictionary:
+                print p , " - skipped"
                 continue
             try:
                 feature_dictionary[p] = self.get_fetures_for_prop(quick, p)
