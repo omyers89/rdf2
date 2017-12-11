@@ -126,7 +126,7 @@ class FeatureMiner(MinerBase):
         return tsubj
 
     def get_fetures_for_prop(self, quick, prop_uri):
-        print "mining features for {}".format(self.subject)
+        print "mining features for {}".format(prop_uri)
         s_dump_name = "../results/" + self.subject + "/" + self.subject + "_top.dump"
         #p_dict = self.get_p_dict_from_dump(quick, p_dump_name)
         s_dict = self.get_s_dict_from_dump(quick, s_dump_name)
@@ -209,7 +209,7 @@ class FeatureMiner(MinerBase):
 if __name__ == "__main__":
     # this script will mine all features of all properties of person
     FM = FeatureMiner(DBPEDIA_URL_UP, 'person', "http://dbpedia.org/ontology/Person")
-    fd, missed= FM.mine_features(quick=False)
+    fd, missed = FM.mine_features(quick=False)
     if len(missed) > 0:
         # try again:
         fd, missed = FM.mine_features(quick=False)
