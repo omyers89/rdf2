@@ -56,8 +56,9 @@ def creat_traning_data(subj):
     clsf_file.close()
     return neigh
 
-def get_class_for_new_x(prop_uri, clsfir, quick):
-    features = FM.get_fetures_for_prop(quick, prop_uri)
+
+def get_class_for_new_x(prop_uri, clsfirx, FMx, quick):
+    features = FMx.get_fetures_for_prop(quick, prop_uri)
     if 'p_only_one_counter' not in features:
         return
     x1 = float(features['p_only_one_counter'])
@@ -67,15 +68,15 @@ def get_class_for_new_x(prop_uri, clsfir, quick):
     # prediction = clsfir.predict_proba[[x_list]]
     # print 'prob for ' + prop_uri + 'is:' + prediction
     # return prediction
-    return clsfir.predict_proba([x_list])
+    return clsfirx.predict_proba([x_list])
 
 if __name__ == "__main__":
-    clsfir = creat_traning_data('politician')
+    clsfir = creat_traning_data('person')
     FM = FeatureMiner(DBPEDIA_URL_UP, 'politician', "http://dbpedia.org/ontology/Politician")
-    x1_list = get_class_for_new_x('http://dbpedia.org/ontology/militaryRank',clsfir,True)
-    x11_list = get_class_for_new_x('http://dbpedia.org/ontology/nominee', clsfir, True)
-    x0_list = get_class_for_new_x('http://dbpedia.org/ontology/restingPlacePosition', clsfir, True)
-    x00_list = get_class_for_new_x('http://dbpedia.org/ontology/monarch', clsfir, True)
+    x1_list = get_class_for_new_x('http://dbpedia.org/ontology/militaryRank',clsfir, FM, True)
+    x11_list = get_class_for_new_x('http://dbpedia.org/ontology/nominee', clsfir, FM, True)
+    x0_list = get_class_for_new_x('http://dbpedia.org/ontology/restingPlacePosition', clsfir, FM, True)
+    x00_list = get_class_for_new_x('http://dbpedia.org/ontology/monarch', clsfir, FM, True)
     #http://dbpedia.org/ontology/monarch
 
     print "results:"

@@ -60,8 +60,6 @@ class FeatureMiner(MinerBase):
             #     #obj_rdf_types_dict = self.get_rdf_types_for_o(o_list)
             #     obj_dbo_types_dict = self.get_dbo_types_for_o(o_list)
             #     # t_dict_rel = self.get_ot_unique_dict_rel(o_list, obj_rdf_types_dict)  # Done: for specific person and property find the unique types!
-            #
-
             #     if len(o_list) > 1:
             #         # check if there is only one object of every type
             #         # rdf_t_uniques = self.check_multiple_vals_same_type(o_list,
