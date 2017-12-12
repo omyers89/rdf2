@@ -73,10 +73,10 @@ def get_class_for_new_x(prop_uri, clsfirx, FMx, quick):
 if __name__ == "__main__":
     clsfir = creat_traning_data('person')
     FM = FeatureMiner(DBPEDIA_URL_UP, 'politician', "http://dbpedia.org/ontology/Politician")
-    x1_list = get_class_for_new_x('http://dbpedia.org/ontology/militaryRank',clsfir, FM, True)
-    x11_list = get_class_for_new_x('http://dbpedia.org/ontology/nominee', clsfir, FM, True)
-    x0_list = get_class_for_new_x('http://dbpedia.org/ontology/restingPlacePosition', clsfir, FM, True)
-    x00_list = get_class_for_new_x('http://dbpedia.org/ontology/monarch', clsfir, FM, True)
+    x1_list = get_class_for_new_x('http://dbpedia.org/ontology/militaryRank',clsfir, FM, False)
+    x11_list = get_class_for_new_x('http://dbpedia.org/ontology/nominee', clsfir, FM, False)
+    x0_list = get_class_for_new_x('http://dbpedia.org/ontology/restingPlacePosition', clsfir, FM, False)
+    x00_list = get_class_for_new_x('http://dbpedia.org/ontology/monarch', clsfir, FM, False)
     #http://dbpedia.org/ontology/monarch
 
     print "results:"
