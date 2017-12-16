@@ -58,7 +58,10 @@ def creat_traning_data(subj):
 
 
 def get_class_for_new_x(prop_uri, clsfirx, FMx, quick):
-    features = FMx.get_fetures_for_prop(quick, prop_uri)
+    try:
+        features = FMx.get_fetures_for_prop(quick, prop_uri)
+    except:
+        return [-1,-1]
     if 'p_only_one_counter' not in features:
         return
     x1 = float(features['p_only_one_counter'])
