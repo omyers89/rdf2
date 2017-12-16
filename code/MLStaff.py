@@ -76,19 +76,33 @@ def get_class_for_new_x(prop_uri, clsfirx, FMx, quick):
 if __name__ == "__main__":
     clsfir = creat_traning_data('person')
     FM = FeatureMiner(DBPEDIA_URL_UP, 'politician', "http://dbpedia.org/ontology/Politician")
-    x1_list = get_class_for_new_x('http://dbpedia.org/ontology/militaryRank',clsfir, FM, False)
-    x11_list = get_class_for_new_x('http://dbpedia.org/ontology/nominee', clsfir, FM, False)
-    x0_list = get_class_for_new_x('http://dbpedia.org/ontology/restingPlacePosition', clsfir, FM, False)
-    x00_list = get_class_for_new_x('http://dbpedia.org/ontology/monarch', clsfir, FM, False)
-    #http://dbpedia.org/ontology/monarch
+    # x1_list = get_class_for_new_x('http://dbpedia.org/ontology/militaryRank',clsfir, FM, False)
+    # x11_list = get_class_for_new_x('http://dbpedia.org/ontology/nominee', clsfir, FM, False)
+    x0_list = get_class_for_new_x('http://dbpedia.org/ontology/deputy', clsfir, FM, False)
+    x11_list = get_class_for_new_x('http://dbpedia.org/ontology/governor', clsfir, FM, False)
+    x111_list = get_class_for_new_x('http://dbpedia.org/ontology/lieutenant', clsfir, FM, False)
+    x1111_list = get_class_for_new_x('http://dbpedia.org/ontology/relation', clsfir, FM, False)
+    x11111_list = get_class_for_new_x('http://dbpedia.org/ontology/vicePresident', clsfir, FM, False)
+    #http://dbpedia.org/ontology/vicePresident
+
+
+
+    x00_sanity_list = get_class_for_new_x('http://dbpedia.org/ontology/birthPlace', clsfir, FM, False)
+    #http://dbpedia.org/ontology/birthPlace
 
     print "results:"
     print "x1_list:"
-    print x1_list
+    # print x1_list
+    print "x00_sanity_list:"
+    print x00_sanity_list
     print "x11_list:"
     print x11_list
-    print "x00_list:"
-    print x00_list
+    print "x111_list:"
+    print x111_list
+    print "x1111_list:"
+    print x1111_list
+    print "x11111_list:"
+    print x11111_list
     print "x0_list:"
     print x0_list
 
