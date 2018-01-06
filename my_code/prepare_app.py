@@ -206,8 +206,7 @@ def get_ps(uri, s_name ):
 
 
 if __name__ == '__main__':
-
-    get_all_p_dict()
+    get_ps("http://dbpedia.org/ontology/Person", 'person')
 
 
 
