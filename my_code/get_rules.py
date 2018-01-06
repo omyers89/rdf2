@@ -108,14 +108,41 @@ def get_all_rules(subj):
     print_rules_to_csv(subj)
     print_f_rules_to_csv(subj)
 
+def print_features_to_csv(subj):
+    rf_name = "../results/" + subj + "/" + subj + "_features.dump"
+    if not os.path.exists(rf_name):
+        return
+    rules_file = open(rf_name, 'r')
+    all_p_rules_tup = pickle.load(rules_file)
+    rules_file.close()
+
+    all_p_rules = all_p_rules_tup
+    csvf_name = "../results/" + subj + "/" + subj + "_features.csv"
+
+    with open(csvf_name, 'w') as csvfile1:
+        fieldnames = ['prop', 'p_only_one_counter', 'p_multy_objs_same_type_counter', 'p_objs_unique_type_counter']
+        writer = csv.DictWriter(csvfile1, fieldnames=fieldnames)
+        writer.writeheader()
+        for p, v in all_p_rules.items():
+            p_uni = p.encode('utf-8')
+            f1_uni = v['p_only_one_counter']
+            f2_uni = v['p_multy_objs_same_type_counter']
+            f3_uni = v['p_objs_unique_type_counter']
+
+            data = {'prop': p_uni, 'p_only_one_counter': f1_uni, 'p_multy_objs_same_type_counter': f2_uni,
+                    'p_objs_unique_type_counter': f3_uni}
+            writer.writerow(data)
+
+    csvfile1.close()
+
 
 if __name__ == '__main__':
-
-    #get_all_rules([{'comedian': "http://dbpedia.org/ontology/Comedian"}])
-    for d in [{'person': "http://dbpedia.org/ontology/Person"}]:
-        for s, suri in d.items():
-            print_cv_rules_to_csv(s)
-    #for d in dictionaries:
+    print_features_to_csv('person')
+    # #get_all_rules([{'comedian': "http://dbpedia.org/ontology/Comedian"}])
+    # for d in [{'person': "http://dbpedia.org/ontology/Person"}]:
+    #     for s, suri in d.items():
+    #         print_cv_rules_to_csv(s)
+    # #for d in dictionaries:
 
         
 

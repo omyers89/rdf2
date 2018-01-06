@@ -63,7 +63,7 @@ class MinerBase:
         if quick:
             return self.__get_top_15_props(s_dict, n=50)
         else:
-            return self.__get_top_15_props(s_dict, n=3000)
+            return self.__get_top_15_props(s_dict, n=5000)
 
     ##########################################################
 

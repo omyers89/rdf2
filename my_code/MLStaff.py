@@ -15,7 +15,7 @@ def creat_traning_data(subj):
         if line['class'] == '2':
             continue
         uri = line['uri']
-        clsf = line['class']
+        clsf = int(line['class'])
         classified_properies_dict[uri] = {'class': clsf, 'features': {}}
     dump_name = "../results/" + subj + "/" + subj + "_features.dump"
     feature_dict_file = open(dump_name, 'r')
@@ -57,7 +57,7 @@ def creat_traning_data(subj):
     return neigh
 
 
-def get_class_for_new_x(prop_uri, clsfirx, FMx, quick):
+def get_classes_prob_for_new_x(prop_uri, clsfirx, FMx, quick):
     try:
         features = FMx.get_fetures_for_prop(quick, prop_uri)
     except:
@@ -73,28 +73,48 @@ def get_class_for_new_x(prop_uri, clsfirx, FMx, quick):
     # return prediction
     return clsfirx.predict_proba([x_list])
 
-if __name__ == "__main__":
+def get_class_with_prob(prop_uri, quick=True):
     clsfir = creat_traning_data('person')
     FM = FeatureMiner(DBPEDIA_URL_UP, 'person', "http://dbpedia.org/ontology/Person")
-    # x1_list = get_class_for_new_x('http://dbpedia.org/ontology/militaryRank',clsfir, FM, False)
-    # x11_list = get_class_for_new_x('http://dbpedia.org/ontology/nominee', clsfir, FM, False)
-    # x0_list = get_class_for_new_x('http://dbpedia.org/ontology/deputy', clsfir, FM, False)
-    # x11_list = get_class_for_new_x('http://dbpedia.org/ontology/governor', clsfir, FM, False)
-    # x111_list = get_class_for_new_x('http://dbpedia.org/ontology/lieutenant', clsfir, FM, False)
-    # x1111_list = get_class_for_new_x('http://dbpedia.org/ontology/relation', clsfir, FM, False)
-    # x11111_list = get_class_for_new_x('http://dbpedia.org/ontology/vicePresident', clsfir, FM, False)
+    res_prod_list=[0,0]
+    bool_result = False
+    try:
+        res_prod_list = get_classes_prob_for_new_x(prop_uri, clsfir, FM, quick)
+        print "res_prod_list is:"
+        print res_prod_list
+        real_prob = res_prod_list[0]
+        bool_result = real_prob[1] > 0.5  # if 1 (prob for temporal greater than 0.5 ) res is true for display
+    except:
+        LOG(" Failed to find probs for p: %s" % prop_uri)
+
+    return bool_result, (real_prob[1] if bool_result else real_prob[0])
+
+
+
+
+
+if __name__ == "__main__":
+    #clsfir = creat_traning_data('person')
+    #FM = FeatureMiner(DBPEDIA_URL_UP, 'person', "http://dbpedia.org/ontology/Person")
+    # x1_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/militaryRank',clsfir, FM, False)
+    # x11_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/nominee', clsfir, FM, False)
+    # x0_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/deputy', clsfir, FM, False)
+    # x11_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/governor', clsfir, FM, False)
+    # x111_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/lieutenant', clsfir, FM, False)
+    # x1111_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/relation', clsfir, FM, False)
+    # x11111_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/vicePresident', clsfir, FM, False)
     # #http://dbpedia.org/ontology/vicePresident
 
 
-
-    x00_sanity_list = get_class_for_new_x('http://dbpedia.org/ontology/birthPlace', clsfir, FM, False)
+    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/spouse")
+    #x00_sanity_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/birthPlace', clsfir, FM, False)
     #http://dbpedia.org/ontology/birthPlace
-
+    print str(b) + ", " + str(p)
     print "results:"
     print "x1_list:"
     # print x1_list
     print "x00_sanity_list:"
-    print x00_sanity_list
+   # print x00_sanity_list
     print "x11_list:"
     # print x11_list
     # print "x111_list:"

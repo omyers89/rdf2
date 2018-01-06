@@ -14,9 +14,11 @@ class FeatureMiner(MinerBase):
     def mine_features(self, quick):
         print "mining rules for {}".format(self.subject)
         s_dump_name = "../results/" + self.subject + "/" + self.subject + "_top.dump"
-        p_dump_name = "../results/" + self.subject + "/" + self.subject + "_prop.dump"
+        #p_dump_name = "../results/" + self.subject + "/" + self.subject + "_prop100.dump"
+        p_p_dump_name = "../results/" + self.subject + "/" + self.subject + "_prop_p100.dump"
         # get the 100 most popular properties for type person in dbp
-        p_dict = self.get_p_dict_from_dump(quick, p_dump_name)
+        #p_dict = self.get_p_dict_from_dump(quick, p_dump_name)
+        p_dict = self.get_p_dict_from_dump(quick, p_p_dump_name)
         s_dict = self.get_s_dict_from_dump(quick, s_dump_name)
 
         dir_name = "../results/" + self.subject
@@ -142,14 +144,14 @@ class FeatureMiner(MinerBase):
             if len(o_list) > 0:
                 # means that there is at least one object related to the subject.
                 p_count += 1
-            # obj_rdf_types_dict = self.get_rdf_types_for_o(o_list)
-            obj_dbo_types_dict = self.get_dbo_types_for_o(o_list)
+            obj_rdf_types_dict = self.get_rdf_types_for_o(o_list)
+            #obj_dbo_types_dict = self.get_dbo_types_for_o(o_list)
             # t_dict_rel = self.get_ot_unique_dict_rel(o_list, obj_rdf_types_dict)  # Done: for specific person and property find the unique types!
 
             if len(o_list) > 1:
                 # check if there is only one object of every type
                 dbo_t_uniques = self.check_multiple_vals_same_type(o_list,
-                                                                   obj_dbo_types_dict)  # Done: for specific person and property find the unique types!
+                                                                   obj_rdf_types_dict)  # Done: for specific person and property find the unique types!
 
                 if not dbo_t_uniques:
                     p_multy_objs_same_type_counter += 1
