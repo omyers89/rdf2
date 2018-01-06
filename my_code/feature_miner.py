@@ -115,7 +115,7 @@ class FeatureMiner(MinerBase):
             dir_name = "../results/" + self.subject
             if not os.path.exists(dir_name):
                 os.makedirs(dir_name)
-            dump_name = dir_name + "/" + self.subject + "_features.dump"
+            dump_name = dir_name + "/" + self.subject + "_features100.dump"
             r_dict_file = open(dump_name, 'w')
             pickle.dump(feature_dictionary, r_dict_file)
             r_dict_file.close()
