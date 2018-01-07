@@ -34,7 +34,9 @@ def creat_traning_data(subj):
         if prop in classified_properies_dict:
             classified_properies_dict[prop]['features'] = features
             t_seg = classified_properies_dict[prop]['seg']
-            classified_properies_dict[prop]['seg'] = (float(t_seg)/max_seg) / len(classified_properies_dict)
+            classified_properies_dict[prop]['seg'] = (float(t_seg)/max_seg) * len(classified_properies_dict)
+            if  classified_properies_dict[prop]['seg'] < 1:
+                print prop + " -is not so seg!"
 
     #now we have in classified_properies_dict all props classified and with the features
 
@@ -52,7 +54,7 @@ def creat_traning_data(subj):
         x1 = float(features['p_only_one_counter'])
         x2 = float(features['p_multy_objs_same_type_counter'])
         x3 = float(features['p_objs_unique_type_counter'])
-        for i in range(weight):
+        for i in range(int(weight)):
             x_list.append([x1,x2,x3])
             y_list.append(int(v['class']))
 
@@ -120,7 +122,7 @@ if __name__ == "__main__":
     # #http://dbpedia.org/ontology/vicePresident
 
 
-    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/birthPlace", False, 10)
+    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/birthPlace", False, 20)
     #x00_sanity_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/birthPlace', clsfir, FM, False)
     #http://dbpedia.org/ontology/birthPlace
     print str(b) + ", " + str(p)
