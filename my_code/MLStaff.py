@@ -35,7 +35,8 @@ def creat_traning_data(subj):
             classified_properies_dict[prop]['features'] = features
             t_seg = classified_properies_dict[prop]['seg']
             classified_properies_dict[prop]['seg'] = (float(t_seg)/max_seg) * len(classified_properies_dict)
-            if  classified_properies_dict[prop]['seg'] < 1:
+            if classified_properies_dict[prop]['seg'] < 1:
+                classified_properies_dict[prop]['seg'] = 1
                 print prop + " -is not so seg!"
 
     #now we have in classified_properies_dict all props classified and with the features
