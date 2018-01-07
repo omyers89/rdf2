@@ -4,6 +4,7 @@ import os
 import time
 import csv
 #import sklearn
+from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
 from feature_miner import *
 
@@ -55,13 +56,17 @@ def creat_traning_data(subj):
         x1 = float(features['p_only_one_counter'])
         x2 = float(features['p_multy_objs_same_type_counter'])
         x3 = float(features['p_objs_unique_type_counter'])
-        for i in range(int(weight)):
+        for i in range(int(round(weight))):
             x_list.append([x1,x2,x3])
             y_list.append(int(v['class']))
 
     #now we have here x_list with lists of fetures ordered at same order as the lables
     neigh = KNeighborsClassifier(n_neighbors=3)
     neigh.fit(x_list, y_list)
+
+    clf_svm = svm.SVC()
+    clf_svm.fit(x_list, y_list)
+
 
     dir_name = "../dumps"
     if not os.path.exists(dir_name):
@@ -70,7 +75,7 @@ def creat_traning_data(subj):
     clsf_file = open(dump_name, 'w')
     pickle.dump(neigh, clsf_file)
     clsf_file.close()
-    return neigh
+    return neigh, clf_svm
 
 
 def get_classes_prob_for_new_x(prop_uri, clsfirx, FMx, quick, nx):
@@ -90,16 +95,20 @@ def get_classes_prob_for_new_x(prop_uri, clsfirx, FMx, quick, nx):
     # return prediction
     return clsfirx.predict_proba([x_list])
 
+
 def get_class_with_prob(prop_uri, quick=True, nx=-1):
-    clsfir = creat_traning_data('person')
+    clsfir, svm_clsfr = creat_traning_data('person')
     FM = FeatureMiner(DBPEDIA_URL_UP, 'person', "http://dbpedia.org/ontology/Person")
-    res_prod_list=[0,0]
+    real_prob=[0,0]
     bool_result = False
     try:
-        res_prod_list = get_classes_prob_for_new_x(prop_uri, clsfir, FM, quick, nx)
-        print "res_prod_list is:"
-        print res_prod_list
-        real_prob = res_prod_list[0]
+        res_prod_list_knn = get_classes_prob_for_new_x(prop_uri, clsfir, FM, quick, nx)
+        res_prod_list_svm = get_classes_prob_for_new_x(prop_uri, svm_clsfr, FM, quick, nx)
+        print "res_prod_list is knn:"
+        print res_prod_list_knn
+        print "res_prod_list is svm:"
+        print res_prod_list_svm
+        real_prob = res_prod_list_svm[0]
         bool_result = real_prob[1] > 0.5  # if 1 (prob for temporal greater than 0.5 ) res is true for display
     except:
         LOG(" Failed to find probs for p: %s" % prop_uri)
@@ -123,7 +132,7 @@ if __name__ == "__main__":
     # #http://dbpedia.org/ontology/vicePresident
 
 
-    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/birthPlace", False, 20)
+    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/birthPlace", False, 50)
     #x00_sanity_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/birthPlace', clsfir, FM, False)
     #http://dbpedia.org/ontology/birthPlace
     print str(b) + ", " + str(p)
