@@ -22,7 +22,7 @@ class FeatureMiner(MinerBase):
         s_dict = self.get_s_dict_from_dump(quick, s_dump_name)
 
         dir_name = "../results/" + self.subject
-        dump_name = dir_name + "/" + self.subject + "_features.dump"
+        dump_name = dir_name + "/" + self.subject + "_features100.dump"
         if not os.path.exists(dump_name):
             feature_dictionary = {}
         else:
@@ -36,11 +36,12 @@ class FeatureMiner(MinerBase):
         p_indx = 0
         missed_ps = []
         for p in p_dict:
+            #http://dbpedia.org/property/publisher
             if p in feature_dictionary:
                 print p , " - skipped"
                 continue
             try:
-                feature_dictionary[p] = self.get_fetures_for_prop(quick, p)
+                feature_dictionary[p] = self.get_fetures_for_prop(quick, p, 2000)
             except:
                 missed_ps.append(p)
 
