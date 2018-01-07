@@ -16,15 +16,25 @@ def creat_traning_data(subj):
             continue
         uri = line['uri']
         clsf = int(line['class'])
-        classified_properies_dict[uri] = {'class': clsf, 'features': {}}
+        seg = int(line['cnter'])
+        classified_properies_dict[uri] = {'seg': seg, 'class': clsf, 'features': {}}
     dump_name = "../results/" + subj + "/" + subj + "_features.dump"
     feature_dict_file = open(dump_name, 'r')
     feature_dict = pickle.load(feature_dict_file)
     feature_dict_file.close()
 
+    max_seg = 0
+    for (p,v) in classified_properies_dict.items():
+        if v['seg'] > max_seg:
+            max_seg = v['seg']
+
+    # add here weighted features.
+
     for (prop, features) in feature_dict.items():
         if prop in classified_properies_dict:
             classified_properies_dict[prop]['features'] = features
+            t_seg = classified_properies_dict[prop]['seg']
+            classified_properies_dict[prop]['seg'] = (float(t_seg)/max_seg) / len(classified_properies_dict)
 
     #now we have in classified_properies_dict all props classified and with the features
 
@@ -35,13 +45,16 @@ def creat_traning_data(subj):
 
     for (p, v) in classified_properies_dict.items():
         features = v['features']
+        weight = v['seg']
         if 'p_only_one_counter' not in features:
             continue
-        y_list.append(int(v['class']))
+
         x1 = float(features['p_only_one_counter'])
         x2 = float(features['p_multy_objs_same_type_counter'])
         x3 = float(features['p_objs_unique_type_counter'])
-        x_list.append([x1,x2,x3])
+        for i in range(weight):
+            x_list.append([x1,x2,x3])
+            y_list.append(int(v['class']))
 
     #now we have here x_list with lists of fetures ordered at same order as the lables
     neigh = KNeighborsClassifier(n_neighbors=3)
@@ -68,6 +81,7 @@ def get_classes_prob_for_new_x(prop_uri, clsfirx, FMx, quick, nx):
     x2 = float(features['p_multy_objs_same_type_counter'])
     x3 = float(features['p_objs_unique_type_counter'])
     x_list=[x1, x2, x3]
+    print x_list
     # prediction = clsfir.predict_proba[[x_list]]
     # print 'prob for ' + prop_uri + 'is:' + prediction
     # return prediction
@@ -106,7 +120,7 @@ if __name__ == "__main__":
     # #http://dbpedia.org/ontology/vicePresident
 
 
-    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/birthPlace", False, 100)
+    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/birthPlace", False, 10)
     #x00_sanity_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/birthPlace', clsfir, FM, False)
     #http://dbpedia.org/ontology/birthPlace
     print str(b) + ", " + str(p)
