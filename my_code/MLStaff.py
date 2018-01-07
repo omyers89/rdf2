@@ -57,9 +57,9 @@ def creat_traning_data(subj):
     return neigh
 
 
-def get_classes_prob_for_new_x(prop_uri, clsfirx, FMx, quick):
+def get_classes_prob_for_new_x(prop_uri, clsfirx, FMx, quick, nx):
     try:
-        features = FMx.get_fetures_for_prop(quick, prop_uri)
+        features = FMx.get_fetures_for_prop(quick, prop_uri,nx)
     except:
         return [-1,-1]
     if 'p_only_one_counter' not in features:
@@ -73,13 +73,13 @@ def get_classes_prob_for_new_x(prop_uri, clsfirx, FMx, quick):
     # return prediction
     return clsfirx.predict_proba([x_list])
 
-def get_class_with_prob(prop_uri, quick=True):
+def get_class_with_prob(prop_uri, quick=True, nx=-1):
     clsfir = creat_traning_data('person')
     FM = FeatureMiner(DBPEDIA_URL_UP, 'person', "http://dbpedia.org/ontology/Person")
     res_prod_list=[0,0]
     bool_result = False
     try:
-        res_prod_list = get_classes_prob_for_new_x(prop_uri, clsfir, FM, quick)
+        res_prod_list = get_classes_prob_for_new_x(prop_uri, clsfir, FM, quick, nx)
         print "res_prod_list is:"
         print res_prod_list
         real_prob = res_prod_list[0]
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     # #http://dbpedia.org/ontology/vicePresident
 
 
-    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/spouse")
+    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/birthPlace", False, 100)
     #x00_sanity_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/birthPlace', clsfir, FM, False)
     #http://dbpedia.org/ontology/birthPlace
     print str(b) + ", " + str(p)
