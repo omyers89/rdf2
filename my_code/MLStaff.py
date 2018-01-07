@@ -102,16 +102,16 @@ def get_class_with_prob(prop_uri, quick=True, nx=-1):
     real_prob=[0,0]
     bool_result = False
     try:
-        res_prod_list_knn = get_classes_prob_for_new_x(prop_uri, clsfir, FM, quick, nx)
+        # res_prod_list_knn = get_classes_prob_for_new_x(prop_uri, clsfir, FM, quick, nx)
         res_prod_list_svm = get_classes_prob_for_new_x(prop_uri, svm_clsfr, FM, quick, nx)
-        print "res_prod_list is knn:"
-        print res_prod_list_knn
+        # print "res_prod_list is knn:"
+        # print res_prod_list_knn
         print "res_prod_list is svm:"
         print res_prod_list_svm
         real_prob = res_prod_list_svm[0]
         bool_result = real_prob[1] > 0.5  # if 1 (prob for temporal greater than 0.5 ) res is true for display
-    except:
-        LOG(" Failed to find probs for p: %s" % prop_uri)
+    except Exception as e:
+        LOG(" Failed to find probs for p:" + e )
 
     return bool_result, (real_prob[1] if bool_result else real_prob[0])
 
