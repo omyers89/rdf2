@@ -126,11 +126,11 @@ class FeatureMiner(MinerBase):
         tsubj = rsplit(uri_strin,"/")[-1]
         return tsubj
 
-    def get_fetures_for_prop(self, quick, prop_uri):
+    def get_fetures_for_prop(self, quick, prop_uri, nx=-1):
         print "mining features for {}".format(prop_uri)
         s_dump_name = "../results/" + self.subject + "/" + self.subject + "_top.dump"
         #p_dict = self.get_p_dict_from_dump(quick, p_dump_name)
-        s_dict = self.get_s_dict_from_dump(quick, s_dump_name)
+        s_dict = self.get_s_dict_from_dump(quick, s_dump_name, nx)
         progress = 0
         #p_size = len(p_dict)
         p_indx = 0
