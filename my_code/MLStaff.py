@@ -7,7 +7,7 @@ import csv
 from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
 from feature_miner import *
-
+from dist_feature_miner import *
 def creat_traning_data(subj):
     #reader = csv.DictReader(open('../results/person/person_features-old.dump', 'rb'))
     reader = csv.DictReader(open('../results/person/person_props_clsfd.csv', 'rb'))
@@ -64,7 +64,7 @@ def creat_traning_data(subj):
     neigh = KNeighborsClassifier(n_neighbors=3)
     neigh.fit(x_list, y_list)
 
-    clf_svm = svm.SVC()
+    clf_svm = svm.SVC(probability=True)
     clf_svm.fit(x_list, y_list)
 
 
@@ -98,12 +98,12 @@ def get_classes_prob_for_new_x(prop_uri, clsfirx, FMx, quick, nx):
 
 def get_class_with_prob(prop_uri, quick=True, nx=-1):
     clsfir, svm_clsfr = creat_traning_data('person')
-    FM = FeatureMiner(DBPEDIA_URL_UP, 'person', "http://dbpedia.org/ontology/Person")
+    DFM = DistFeatureMiner(DBPEDIA_URL_UP, 'person', "http://dbpedia.org/ontology/Person")
     real_prob=[0,0]
     bool_result = False
     try:
         # res_prod_list_knn = get_classes_prob_for_new_x(prop_uri, clsfir, FM, quick, nx)
-        res_prod_list_svm = get_classes_prob_for_new_x(prop_uri, svm_clsfr, FM, quick, nx)
+        res_prod_list_svm = get_classes_prob_for_new_x(prop_uri, svm_clsfr, DFM , quick, nx)
         # print "res_prod_list is knn:"
         # print res_prod_list_knn
         print "res_prod_list is svm:"
@@ -111,7 +111,7 @@ def get_class_with_prob(prop_uri, quick=True, nx=-1):
         real_prob = res_prod_list_svm[0]
         bool_result = real_prob[1] > 0.5  # if 1 (prob for temporal greater than 0.5 ) res is true for display
     except Exception as e:
-        LOG(" Failed to find probs for p:" + e )
+        LOG(" Failed to find probs for p:" + e.message )
 
     return bool_result, (real_prob[1] if bool_result else real_prob[0])
 
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     # #http://dbpedia.org/ontology/vicePresident
 
 
-    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/birthPlace", False, 50)
+    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/spouse", False, 50)
     #x00_sanity_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/birthPlace', clsfir, FM, False)
     #http://dbpedia.org/ontology/birthPlace
     print str(b) + ", " + str(p)
