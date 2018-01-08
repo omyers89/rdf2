@@ -64,7 +64,6 @@ class DistFeatureMiner(MinerBase):
             r_dict_file = open(dump_name, 'w')
             pickle.dump(feature_dictionary, r_dict_file)
             r_dict_file.close()
-
         return feature_dictionary, missed_ps
 
     def get_subj_from_uri(self,uri_strin):
@@ -87,7 +86,6 @@ class DistFeatureMiner(MinerBase):
         s_dict = self.get_s_dict_from_dump(quick, s_dump_name, nx)
         progress = 0
         #p_size = len(p_dict)
-        p_indx = 0
 
         self.p_count = 0
         self.p_only_one_counter = 0
@@ -111,18 +109,12 @@ class DistFeatureMiner(MinerBase):
                     th.join()
                 thread_dict = {}
                 j = 0
-                print "flushed:"
-                print self.p_count, ";", self.p_multy_objs_same_type_counter, ";", self.p_objs_unique_type_counter, ";", self.p_only_one_counter
+                if DEBUG:
+                    print "flushed:"
+                    print self.p_count, ";", self.p_multy_objs_same_type_counter, ";", self.p_objs_unique_type_counter, ";", self.p_only_one_counter
 
         for ih, th in thread_dict.items():
             th.join()
-
-        if DEBUG:
-            sys.stdout.write("\b the total p are : {}".format(self.p_count))
-            sys.stdout.write("\r")
-            sys.stdout.flush()
-        p_indx += 1
-        # print total_totals
 
         progress += 1
         if self.p_count > 0:
