@@ -128,9 +128,9 @@ class DistFeatureMiner(MinerBase):
                     th.join()
                 thread_dict = {}
                 j = 0
-                if DEBUG:
-                    print "flushed:"
-                    print self.p_count, ";", self.p_multy_objs_same_type_counter, ";", self.p_objs_unique_type_counter, ";", self.p_only_one_counter
+                # if DEBUG:
+                #     print "flushed:"
+                #     print self.p_count, ";", self.p_multy_objs_same_type_counter, ";", self.p_objs_unique_type_counter, ";", self.p_only_one_counter
 
         for ih, th in thread_dict.items():
             th.join()
@@ -144,8 +144,8 @@ class DistFeatureMiner(MinerBase):
             feature_dict = {"p_only_one_counter": -1,
                                             "p_multy_objs_same_type_counter": -1,
                                             "p_objs_unique_type_counter": -1}
-        print "final"
-        print self.p_count, ";",self.p_multy_objs_same_type_counter, ";",self.p_objs_unique_type_counter,";", self.p_only_one_counter
+        # print "final"
+        # print self.p_count, ";",self.p_multy_objs_same_type_counter, ";",self.p_objs_unique_type_counter,";", self.p_only_one_counter
         return feature_dict
 
 
@@ -223,4 +223,4 @@ if __name__ == "__main__":
     #     fd, missed = FM.mine_features(quick=False)
     #
     # print "tried twice ps left:", missed
-    features = FM.mine_features(True)
+    features = FM.mine_features(False)
