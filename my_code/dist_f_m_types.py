@@ -3,7 +3,7 @@ import csv
 from miner_base import *
 from string import rsplit
 from threading import Lock, Thread
-
+import re
 
 DEBUG = True
 mine_types=True
@@ -207,11 +207,14 @@ class DistFeatureMiner(MinerBase):
 
     def atomic_update_t_dict(self, obj_rdf_types_dict):
         self.t_lock.acquire()
+        re_ontology = re.compile(r"^(.*)" + "ontology" + "(.*)$", re.I)
+        # re_ontology = re.compile(r"^(.*)" + "ontology" + "(.*)$", re.I)
         for k,v in obj_rdf_types_dict.items():
             for iv in v:
-                if iv not in self.type_counters:
-                    self.type_counters[iv] = 0
-                self.type_counters[iv] += 1
+                if re_ontology.match(iv):
+                    if iv not in self.type_counters:
+                        self.type_counters[iv] = 0
+                    self.type_counters[iv] += 1
         self.t_lock.release()
 
 if __name__ == "__main__":
