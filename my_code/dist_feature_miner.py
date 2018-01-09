@@ -16,6 +16,7 @@ class DistFeatureMiner(MinerBase):
         self.p_only_one_counter = 0
         self.p_multy_objs_same_type_counter = 0
         self.p_objs_unique_type_counter = 0
+        self.type_counters = {}
 
     def mine_features(self, quick):
         print "mining rules for {}".format(self.subject)

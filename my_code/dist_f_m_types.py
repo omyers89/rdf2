@@ -74,7 +74,7 @@ class DistFeatureMiner(MinerBase):
             os.makedirs(dir_name)
         csvp_name = dir_name + "/" + self.subject + "_types.csv"
         with open(csvp_name, 'w') as csvfile2:
-            fieldnames = ['uri', 'cnter']
+            fieldnames = ['prop_uri', 'cnter']
             writer = csv.DictWriter(csvfile2, fieldnames=fieldnames)
             writer.writeheader()
             for r, c in self.type_counters.items():

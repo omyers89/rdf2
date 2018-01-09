@@ -48,7 +48,7 @@ def get_subj_from_dump(subj_name):
             data = {'uri' : subj_uri, 'cnter' : c}
             writer.writerow(data)
 
-    csvfile1.close()
+    csvfile2.close()
 
 
 
