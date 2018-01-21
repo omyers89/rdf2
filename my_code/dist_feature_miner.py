@@ -48,7 +48,7 @@ class DistFeatureMiner(MinerBase):
                 print p , " - skipped"
                 continue
             try:
-                feature_dictionary[p] = self.get_fetures_for_prop(quick, p, 1000)
+                feature_dictionary[p] = self.get_fetures_for_prop(quick, p, 2000)
             except:
                 missed_ps.append(p)
 
@@ -136,6 +136,8 @@ class DistFeatureMiner(MinerBase):
         p_objs_unique_type_counter=0
         p_only_one_counter=0
         o_list = self.get_objects_for_s_p(prop_uri, s)
+        if len(o_list) == 0:
+            return
         if len(o_list) > 0:
             # means that there is at least one object related to the subject.
             p_count = 1
