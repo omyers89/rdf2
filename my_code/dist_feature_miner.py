@@ -105,7 +105,7 @@ class DistFeatureMiner(MinerBase):
                 sys.stdout.write(txt)
                 sys.stdout.write("\r")
                 sys.stdout.flush()
-            if j > 40:
+            if j > 20:
                 for ih, th in thread_dict.items():
                     th.join()
                 thread_dict = {}
