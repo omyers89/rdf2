@@ -5,7 +5,7 @@ DBPEDIA_URL = "http://tdk3.csf.technion.ac.il:8890/sparql"
 DBPEDIA_URL_UP = "http://dbpedia.org/sparql"
 
 
-QUICK = Fals
+QUICK = False
 """
 the idea of this module is to find the properties that in new versions of DBpedia has objects related to them that are
 not exist in the previous sets.
@@ -19,8 +19,8 @@ def get_spo_dict(kb):
     :return: dictionary {(s,p):{o1,o2,o3}}
     """
     miner = MinerBase(kb)
-    s_dict = miner.get_s_dict_from_dump(quick=QUICK, dump_name="../results/person/person_top.dump")
-    p_dict = miner.get_p_dict_from_dump(quick=QUICK, dump_name="../results/person/person_200_prop_for_ML.dump", nx=200)
+    s_dict = miner.get_s_dict_from_dump(quick=QUICK, dump_name="../results/person/FINAL/person_top.dump")
+    p_dict = miner.get_p_dict_from_dump(quick=QUICK, dump_name="../results/person/FINAL/person_200_prop_for_ML.dump", nx=200)
     res_dict={}
     for s in  s_dict:
         for p in p_dict:
@@ -56,10 +56,10 @@ def comp_db():
 
     dir_name = "person"
     dump_name = dir_name + "_diff_props.dump"
-    dir_name = "../results/FINAL/" + dir_name
+    dir_name = "../results/" + dir_name
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
-    p_dict_file = open(dir_name + "/" + dump_name, 'w')
+    p_dict_file = open(dir_name + "/FINAL/" + dump_name, 'w')
     pickle.dump(prop_dif_dict, p_dict_file)
     p_dict_file.close()
 
