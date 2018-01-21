@@ -19,8 +19,8 @@ def get_spo_dict(kb):
     :return: dictionary {(s,p):{o1,o2,o3}}
     """
     miner = MinerBase(kb)
-    s_dict = miner.get_s_dict_from_dump(quick=QUICK, dump_name="../results/person/FINAL/person_top.dump")
-    p_dict = miner.get_p_dict_from_dump(quick=QUICK, dump_name="../results/person/FINAL/person_200_prop_for_ML.dump", nx=200)
+    s_dict = miner.get_s_dict_from_dump(quick=QUICK, dump_name="../results/person/FINAL/person_top.dump", nx=100)
+    p_dict = miner.get_p_dict_from_dump(quick=QUICK, dump_name="../results/person/FINAL/person_200_prop_for_ML.dump", nx=20)
     res_dict={}
     for s in  s_dict:
         for p in p_dict:
