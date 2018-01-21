@@ -119,6 +119,35 @@ class MinerBase:
         return o_list
 
 
+    def get_p_and_objs_for_s(self, s):
+        """
+                given s-subject  return a list of properties and the objects that are related to the subject.
+                :param s: a specific subject
+                :return: dictionary of properties where every value list of objects [o1, o2, o3, .. ] where (s, p, o_i) is in the KB
+                """
+        p_dict_o_list = {}
+        query_text = ("""
+                            SELECT ?p ?o
+                            WHERE{
+                                    <%s> ?p ?o .
+                                    ?o a ?t .
+                                } """ % s)
+        # FILTER (regex(?t, "^http://dbpedia.org/")) maybe removed
+        # I figured out that a good filter for the type of the object has to  be of "^http://dbpedia.org/ontology"
+        # in oreder to get valuable results
+        self.sparql.setQuery(query_text)
+        self.sparql.setReturnFormat(JSON)
+        results_inner = self.sparql.query().convert()
+        for inner_res in results_inner["results"]["bindings"]:
+            p = (inner_res["p"]["value"]).encode('utf-8')
+            o = (inner_res["o"]["value"]).encode('utf-8')
+            if p not in p_dict_o_list:
+                p_dict_o_list[p] = []
+            p_dict_o_list[p].append(o)
+
+        return p_dict_o_list
+
+
     def get_rdf_types_for_o(self, o_list):
         """
         Given list of object and a specific knowledge base creates a dictionary of o and the list of dbo:type that

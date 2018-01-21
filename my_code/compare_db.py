@@ -24,10 +24,12 @@ def get_spo_dict(kb):
     p_dict = miner.get_p_dict_from_dump(quick=QUICK, dump_name="../results/person/FINAL/person_200_prop_for_ML.dump", nx=200)
     res_dict={}
     for i,s in  enumerate(s_dict):
-        for p in p_dict:
-            obj_list = miner.get_objects_for_s_p(p,s)
-            if len(obj_list)>0:
-                res_dict[(s,p)] = obj_list
+        p_dict_obj_list = miner.get_p_and_objs_for_s(s)
+        for p, objs in p_dict_obj_list.items():
+            if p in p_dict:
+                if len(objs)>0:
+                    res_dict[(s,p)] = objs
+
         if DEBUG:
             sys.stdout.write("\b s #{} done".format(i))
             sys.stdout.write("\r")
