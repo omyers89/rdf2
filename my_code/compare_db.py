@@ -52,9 +52,12 @@ def comp_db():
         prop_dif_dict[prop]["tot"] += 1
         if kn in past_res:
             ool = past_res[kn] #list of old objects
+            d_flag = True
             for on in onl:
-                if on not in ool:
+                if on not in ool and d_flag:
                     prop_dif_dict[prop]["diff"] += 1
+                    d_flag = False
+
         else:
             prop_dif_dict[prop]["past_miss"] += 1
 
@@ -69,6 +72,32 @@ def comp_db():
     pickle.dump(prop_dif_dict, p_dict_file)
     p_dict_file.close()
 
-if __name__ == "__main__":
-    comp_db()
 
+def classify_props():
+    # load from dump:
+    dir_name = "person"
+    dump_name = dir_name + "_diff_props.dump"
+    dir_name = "../results/" + dir_name
+    full_file_name = dir_name + "/FINAL/" + dump_name
+    r_dict_file = open(full_file_name, 'r')
+    cop_dict = pickle.load(r_dict_file)
+    r_dict_file.close()
+
+    p_class_dict= {}
+    for k,v in cop_dict.items():
+        if v["tot"] == 0:
+            continue
+        p_class_dict[k] = float(v["diff"])/v["tot"]
+
+    dump_name = "person_diff_props_class.dump"
+    full_file_name = dir_name + "/FINAL/" + dump_name
+    p_dict_file = open(full_file_name, 'w')
+    pickle.dump(p_class_dict, p_dict_file)
+    p_dict_file.close()
+
+    for p,v in p_class_dict.items():
+        print p, "      val: ", v
+
+if __name__ == "__main__":
+    # comp_db()
+    classify_props()
