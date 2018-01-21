@@ -6,6 +6,7 @@ DBPEDIA_URL_UP = "http://dbpedia.org/sparql"
 
 
 QUICK = False
+DEBUG =True
 """
 the idea of this module is to find the properties that in new versions of DBpedia has objects related to them that are
 not exist in the previous sets.
@@ -22,13 +23,15 @@ def get_spo_dict(kb):
     s_dict = miner.get_s_dict_from_dump(quick=QUICK, dump_name="../results/person/FINAL/person_top.dump", nx=1000)
     p_dict = miner.get_p_dict_from_dump(quick=QUICK, dump_name="../results/person/FINAL/person_200_prop_for_ML.dump", nx=200)
     res_dict={}
-    for s in  s_dict:
-        print "in s"
+    for i,s in  enumerate(s_dict):
         for p in p_dict:
             obj_list = miner.get_objects_for_s_p(p,s)
             if len(obj_list)>0:
                 res_dict[(s,p)] = obj_list
-
+        if DEBUG:
+            sys.stdout.write("\b s #{} done".format(i))
+            sys.stdout.write("\r")
+            sys.stdout.flush()
 
     return res_dict
 
