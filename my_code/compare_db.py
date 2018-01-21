@@ -56,7 +56,7 @@ def comp_db():
 
     dir_name = "person"
     dump_name = dir_name + "_diff_props.dump"
-    dir_name = "../results/" + dir_name
+    dir_name = "../results/FINAL/" + dir_name
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
     p_dict_file = open(dir_name + "/" + dump_name, 'w')
