@@ -48,7 +48,7 @@ class DistFeatureMiner(MinerBase):
                 print p , " - skipped"
                 continue
             try:
-                feature_dictionary[p] = self.get_fetures_for_prop(quick, p, 2000)
+                feature_dictionary[p] = self.get_fetures_for_prop(quick, p, 1000)
             except:
                 missed_ps.append(p)
 
@@ -181,10 +181,10 @@ class DistFeatureMiner(MinerBase):
 if __name__ == "__main__":
     # this script will mine all features of all properties of person
     FM = DistFeatureMiner(DBPEDIA_URL_UP, 'person', "http://dbpedia.org/ontology/Person")
-    # fd, missed = FM.mine_features(quick=False)
-    # if len(missed) > 0:
-    #     # try again:
-    #     fd, missed = FM.mine_features(quick=False)
-    #
-    # print "tried twice ps left:", missed
-    features = FM.get_fetures_for_prop(False, "http://dbpedia.org/ontology/spouse", 100)
+    fd, missed = FM.mine_features(quick=False)
+    if len(missed) > 0:
+        # try again:
+        fd, missed = FM.mine_features(quick=False)
+
+    print "tried twice ps left:", missed
+    # features = FM.get_fetures_for_prop(False, "http://dbpedia.org/ontology/spouse", 200)
