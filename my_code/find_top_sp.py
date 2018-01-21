@@ -5,8 +5,8 @@ import sys
 from threading import Thread
 from Utils import *
 
-DBPEDIA_URL = "http://dbpedia.org/sparql"
-
+DBPEDIA_URL_UP = "http://dbpedia.org/sparql"
+DBPEDIA_URL = "http://tdk3.csf.technion.ac.il:8890/sparql"
 
 def get_top_1_percent(i, top_s_dict,uri, f_limit = 200):
     sparql = SPARQLWrapper(DBPEDIA_URL)
