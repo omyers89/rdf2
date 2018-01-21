@@ -156,7 +156,6 @@ def get_p_p_dict(uri, dump_name,dir_name):
     sparql = SPARQLWrapper(DBPEDIA_URL)
     p_dict = {}
 
-
     query_text = ("""
             SELECT ?p (COUNT (?p) AS ?cnt)
             WHERE {
@@ -205,12 +204,80 @@ def get_ps(uri, s_name ):
 
 
 
+def get_best_prop_q(i, top_p_dict,uri = "http://dbpedia.org/ontology/Person", f_limit = 200):
+    sparql = SPARQLWrapper(DBPEDIA_URL)
+
+    limit = 100000
+    offset = i * limit
+    s_f_limit = str(f_limit)
+
+    slimit = str(limit)
+    soffset = str(offset)
+
+    query_text = ("""
+                SELECT ?p (COUNT (?p) AS ?cnt)
+                WHERE {
+                        {
+                        SELECT DISTINCT ?s ?p
+                        WHERE {
+                            ?s a <%s>;
+                                ?p ?o.
+                            ?o a ?t
+                        FILTER regex(?p, "^http://dbpedia.org/property/", "i")
+                    }LIMIT %s
+                    OFFSET %s
+                }
+                }GROUP BY ?p
+                 ORDER BY DESC(?cnt)
+                 LIMIT %s
+                """ % (uri, slimit, soffset, s_f_limit))
+    sparql.setQuery(query_text)
+    sparql.setReturnFormat(JSON)
+    results_inner = sparql.query().convert()
+
+    t_count = 0
+    for inner_res in results_inner["results"]["bindings"]:
+        p = inner_res["p"]["value"]
+        cnt = inner_res["cnt"]["value"]
+        if p not in top_p_dict:
+            top_p_dict[p] = 0
+        top_p_dict[p] += int(cnt)
+        t_count += int(cnt)
+    return t_count>=200
+
+
+def get_best_200_props(uri = "http://dbpedia.org/ontology/Person", dir_name="person"):
+
+    p_dict={}
+    top_num = 200
+    iter_flag = True
+    for i in range(25):
+        if iter_flag:
+            try:
+                iter_flag = get_best_prop_q(i, p_dict, uri, top_num)
+            except Exception as e:
+                print "error in iter: " ,  i , " exception: ",e
+
+    dump_name = dir_name + "_top_200_prop.dump"
+
+    dir_name = "../results/" + dir_name
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+    p_dict_file = open(dir_name + "/" + dump_name, 'w')
+    pickle.dump(p_dict, p_dict_file)
+    p_dict_file.close()
+
+
+
+
 if __name__ == '__main__':
 
-    for d in dictionariest:
-        for s, uri in d.items():
-            t = Thread(target=get_ps, args=(uri,s,))
-            t.start()
+    # for d in dictionariest:
+    #     for s, uri in d.items():
+    #         t = Thread(target=get_ps, args=(uri,s,))
+    #         t.start()
+
+    get_best_200_props()
 
 
 

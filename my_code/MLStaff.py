@@ -96,7 +96,7 @@ def get_classes_prob_for_new_x(prop_uri, clsfirx, FMx, quick, nx):
     return clsfirx.predict_proba([x_list])
 
 
-def get_class_with_prob(prop_uri, quick=True, nx=-1):
+def get_class_with_prob(prop_uri, quick=False, nx=-1):
     clsfir, svm_clsfr = creat_traning_data('person')
     DFM = DistFeatureMiner(DBPEDIA_URL_UP, 'person', "http://dbpedia.org/ontology/Person")
     real_prob=[0,0]
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     # #http://dbpedia.org/ontology/vicePresident
 
 
-    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/spouse", False, 50)
+    (b,p ) = get_class_with_prob("http://dbpedia.org/ontology/birthPlace", False, 35)
     #x00_sanity_list = get_classes_prob_for_new_x('http://dbpedia.org/ontology/birthPlace', clsfir, FM, False)
     #http://dbpedia.org/ontology/birthPlace
     print str(b) + ", " + str(p)

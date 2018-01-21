@@ -187,4 +187,4 @@ if __name__ == "__main__":
     #     fd, missed = FM.mine_features(quick=False)
     #
     # print "tried twice ps left:", missed
-    features = FM.get_fetures_for_prop(False, "http://dbpedia.org/ontology/birthPlace", 100)
+    features = FM.get_fetures_for_prop(False, "http://dbpedia.org/ontology/spouse", 100)

@@ -6,7 +6,16 @@ import exceptions
 from string import rsplit
 
 from info_parser import TableParser
-DEBUG = False
+DEBUG = True
+
+
+def make_unicode(inp):
+    if type(inp) != unicode:
+        inp =  inp.decode('utf-8')
+        return inp
+    else:
+        return inp
+
 
 class rel_info_finder:
     def __init__(self, isubj, isubj_db_uri, iinc_path):
@@ -47,11 +56,15 @@ class rel_info_finder:
         
         try:
             parser = TableParser(prop, nms)
-            parser.feed(response)
+            part_string = make_unicode(response)
+            # start_index_of_good = response.find("<body")
+            # part_string = response[start_index_of_good:]
+            parser.feed(part_string)
             self.true_dict[(subj, prop)] = parser.res_dict
         except Exception as e:
             self.LOG( e)
             self.LOG( subj)
+        return self.true_dict[(subj, prop)]
 
     def get_latest_from_true_dict(self,v_dict):
         """
@@ -148,7 +161,7 @@ class rel_info_finder:
                 sys.stdout.write("\r")
                 sys.stdout.flush()
                 i+=1
-                if i > 40 and DEBUG:
+                if i > 20 and DEBUG:
                      break
         if DEBUG:
             for t in self.true_dict.items():
@@ -164,6 +177,57 @@ class rel_info_finder:
 
         self.write_truth_to_csv(False)
 
+def get_truth_for_subj_prop(rif, subj_uri, prop_uri):
+    if ('\\' in subj_uri) or ('\\' in prop_uri):
+        return
+    subj = rif.get_subj_from_uri(subj_uri)
+    prop = rif.get_subj_from_uri(prop_uri)
+    objs = rif.get_related_objects_from_uri([subj_uri,prop_uri ])
+
+    if len(objs) == 0:
+        sys.stdout.write("\b continued")
+        sys.stdout.write("\r")
+        sys.stdout.flush()
+        return
+    try:
+        return rif.example(subj, prop, objs)
+    except:
+        rif.LOG("bad example")
+
+
+def get_latest_from_true_dict( v_dict):
+    """
+    the function gets a dictionay with start and end time of the related objects:
+    returns the one with the latest start time
+    """
+    max = ""
+    max_obj = ""
+    for k,v in v_dict.items():
+        if len(v) >=1 :
+            if max == "" :
+                max = v[0]
+                max_obj = k
+            elif max != "" and max < v[0]:
+                max = v[0]
+                max_obj = k
+    return max_obj, max
+
+def get_current(subj_uri, prop_uri, sus_obj_uri):
+    rif = rel_info_finder('person',
+                          "http://dbpedia.org/ontology/Person",
+                          '../results/person/Person_temporal_csv.csv')
+    #res = get_truth_for_subj_prop(rif, 'http://dbpedia.org/resource/Donald_Trump', 'http://dbpedia.org/ontology/spouse')
+    res = get_truth_for_subj_prop(rif, subj_uri, prop_uri)
+    t_res = get_latest_from_true_dict(res)
+
+    name_ = rif.get_subj_from_uri(sus_obj_uri)
+    name = name_.replace('_', ' ')
+
+    is_current = (name.lower() == t_res[0].lower())
+
+    return is_current, t_res[0], t_res[1]
+
+
 
 if __name__ == '__main__':
 
@@ -174,6 +238,8 @@ if __name__ == '__main__':
                           "http://dbpedia.org/ontology/Person",
                           '../results/person/Person_temporal_csv.csv')
     #rif.write_truth_to_csv(True)
-
-    rif.auto_fix()
+    res = get_truth_for_subj_prop(rif, 'http://dbpedia.org/resource/Donald_Trump', 'http://dbpedia.org/ontology/spouse')
+    t_res = get_latest_from_true_dict(res)
+    print t_res
+    #rif.auto_fix()
 
