@@ -20,16 +20,16 @@ class DistFeatureMiner(MinerBase):
 
     def mine_features(self, quick):
         print "mining rules for {}".format(self.subject)
-        s_dump_name = "../results/" + self.subject + "/" + self.subject + "_top.dump"
+        s_dump_name = "../results/" + self.subject + "/FINAL/" + self.subject + "_top.dump"
         #p_dump_name = "../results/" + self.subject + "/" + self.subject + "_prop100.dump"
-        p_p_dump_name = "../results/" + self.subject + "/" + self.subject + "_prop_p100.dump"
+        p_p_dump_name = "../results/" + self.subject + "/FINAL/" + self.subject + "_200_prop_for_ML.dump"
         # get the 100 most popular properties for type person in dbp
         #p_dict = self.get_p_dict_from_dump(quick, p_dump_name)
         p_dict = self.get_p_dict_from_dump(quick, p_p_dump_name)
         s_dict = self.get_s_dict_from_dump(quick, s_dump_name)
 
         dir_name = "../results/" + self.subject
-        dump_name = dir_name + "/" + self.subject + "_features100.dump"
+        dump_name = dir_name + "/FINAL/" + self.subject + "_features200.dump"
         if not os.path.exists(dump_name):
             feature_dictionary = {}
         else:
@@ -61,7 +61,7 @@ class DistFeatureMiner(MinerBase):
             dir_name = "../results/" + self.subject
             if not os.path.exists(dir_name):
                 os.makedirs(dir_name)
-            dump_name = dir_name + "/" + self.subject + "_features100.dump"
+            dump_name = dir_name + "/" + self.subject + "_features200.dump"
             r_dict_file = open(dump_name, 'w')
             pickle.dump(feature_dictionary, r_dict_file)
             r_dict_file.close()
