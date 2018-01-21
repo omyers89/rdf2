@@ -31,7 +31,7 @@ class MinerBase:
         return p_dict_ret
 
 
-    def get_p_dict_from_dump(self,quick, dump_name):
+    def get_p_dict_from_dump(self,quick, dump_name, nx=-1):
         """
         :param quick: boolean - for quick debug checks
         :param dump_name: full path to the dump file to load
@@ -41,6 +41,8 @@ class MinerBase:
         p_dict = pickle.load(p_dict_file)
         p_dict_file.close()
 
+        if nx != -1 :
+            return self.__get_top_15_props(p_dict, n=nx)
         if quick:
             return self.__get_top_15_props(p_dict, n=10)
         else:

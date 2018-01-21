@@ -276,7 +276,7 @@ def get_best():
     p_list = p_dict.items()
     sorted_by_second = sorted(p_list, key=lambda tup: tup[1])
 
-    final_list = sorted_by_second[-20:]
+    final_list = sorted_by_second[-200:]
     p_dict_best = dict(final_list)
 
     dir_name = "person"
