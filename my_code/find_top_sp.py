@@ -268,7 +268,25 @@ def get_best_200_props(uri = "http://dbpedia.org/ontology/Person", dir_name="per
     p_dict_file.close()
 
 
+def get_best():
+    p_dict_file = open("../results/person/person_top_200_prop.dump", 'r')
+    p_dict = pickle.load(p_dict_file)
+    p_dict_file.close()
 
+    p_list = p_dict.items()
+    sorted_by_second = sorted(p_list, key=lambda tup: tup[1])
+
+    final_list = sorted_by_second[-20:]
+    p_dict_best = dict(final_list)
+
+    dir_name = "person"
+    dump_name = dir_name + "_200_prop_for_ML.dump"
+    dir_name = "../results/" + dir_name
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+    p_dict_file = open(dir_name + "/" + dump_name, 'w')
+    pickle.dump(p_dict_best, p_dict_file)
+    p_dict_file.close()
 
 if __name__ == '__main__':
 
@@ -277,7 +295,7 @@ if __name__ == '__main__':
     #         t = Thread(target=get_ps, args=(uri,s,))
     #         t.start()
 
-    get_best_200_props()
+    get_best()
 
 
 
