@@ -99,5 +99,5 @@ def classify_props():
         print p, "      val: ", v
 
 if __name__ == "__main__":
-    # comp_db()
+    comp_db()
     classify_props()
